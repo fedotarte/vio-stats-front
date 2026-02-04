@@ -1,0 +1,1157 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/companies": {
+      "post": {
+        "operationId": "CompanyController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Компания создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntity"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Создать компанию",
+        "tags": ["Компании (Клиенты)"]
+      },
+      "get": {
+        "operationId": "CompanyController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Список компаний",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompanyEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получить список всех компаний",
+        "tags": ["Компании (Клиенты)"]
+      }
+    },
+    "/api/v1/companies/{id}": {
+      "get": {
+        "operationId": "CompanyController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID компании",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Компания найдена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        },
+        "summary": "Получить компанию по ID",
+        "tags": ["Компании (Клиенты)"]
+      },
+      "put": {
+        "operationId": "CompanyController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID компании",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Компания обновлена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        },
+        "summary": "Обновить компанию",
+        "tags": ["Компании (Клиенты)"]
+      },
+      "delete": {
+        "operationId": "CompanyController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID компании",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Компания удалена"
+          },
+          "404": {
+            "description": "Компания не найдена"
+          }
+        },
+        "summary": "Удалить компанию",
+        "tags": ["Компании (Клиенты)"]
+      }
+    },
+    "/api/v1/recruiters": {
+      "post": {
+        "operationId": "RecruiterController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecruiterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Рекрутер создан",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecruiterEntity"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Создать рекрутера",
+        "tags": ["Рекрутеры"]
+      },
+      "get": {
+        "operationId": "RecruiterController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Список рекрутеров",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecruiterEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получить список всех рекрутеров",
+        "tags": ["Рекрутеры"]
+      }
+    },
+    "/api/v1/recruiters/{id}": {
+      "get": {
+        "operationId": "RecruiterController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID рекрутера",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Рекрутер найден",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecruiterEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Рекрутер не найден"
+          }
+        },
+        "summary": "Получить рекрутера по ID",
+        "tags": ["Рекрутеры"]
+      },
+      "put": {
+        "operationId": "RecruiterController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID рекрутера",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecruiterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Рекрутер обновлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecruiterEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Рекрутер не найден"
+          }
+        },
+        "summary": "Обновить рекрутера",
+        "tags": ["Рекрутеры"]
+      },
+      "delete": {
+        "operationId": "RecruiterController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID рекрутера",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Рекрутер удален"
+          },
+          "404": {
+            "description": "Рекрутер не найден"
+          }
+        },
+        "summary": "Удалить рекрутера",
+        "tags": ["Рекрутеры"]
+      }
+    },
+    "/api/v1/vacancies": {
+      "post": {
+        "operationId": "VacancyController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVacancyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Вакансия создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VacancyEntity"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Создать вакансию",
+        "tags": ["Вакансии"]
+      },
+      "get": {
+        "operationId": "VacancyController_findAll",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": false,
+            "in": "query",
+            "description": "Фильтр по ID компании",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список вакансий",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacancyEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получить список всех вакансий",
+        "tags": ["Вакансии"]
+      }
+    },
+    "/api/v1/vacancies/{id}": {
+      "get": {
+        "operationId": "VacancyController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID вакансии",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Вакансия найдена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VacancyEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Вакансия не найдена"
+          }
+        },
+        "summary": "Получить вакансию по ID",
+        "tags": ["Вакансии"]
+      },
+      "put": {
+        "operationId": "VacancyController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID вакансии",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVacancyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Вакансия обновлена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VacancyEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Вакансия не найдена"
+          }
+        },
+        "summary": "Обновить вакансию",
+        "tags": ["Вакансии"]
+      },
+      "delete": {
+        "operationId": "VacancyController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID вакансии",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Вакансия удалена"
+          },
+          "404": {
+            "description": "Вакансия не найдена"
+          }
+        },
+        "summary": "Удалить вакансию",
+        "tags": ["Вакансии"]
+      }
+    },
+    "/api/v1/assignments": {
+      "post": {
+        "operationId": "AssignmentController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssignmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Рекрутер назначен на вакансию",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedVacancyRecruiterDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Рекрутер уже назначен на эту вакансию"
+          }
+        },
+        "summary": "Назначить рекрутера на вакансию",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      },
+      "get": {
+        "operationId": "AssignmentController_findAll",
+        "parameters": [
+          {
+            "name": "recruiterId",
+            "required": false,
+            "in": "query",
+            "description": "Фильтр по ID рекрутера",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vacancyId",
+            "required": false,
+            "in": "query",
+            "description": "Фильтр по ID вакансии",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список назначений",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedVacancyRecruiterDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Получить список всех назначений",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      }
+    },
+    "/api/v1/assignments/{id}": {
+      "get": {
+        "operationId": "AssignmentController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID назначения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Назначение найдено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedVacancyRecruiterDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Назначение не найдено"
+          }
+        },
+        "summary": "Получить назначение по ID",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      },
+      "put": {
+        "operationId": "AssignmentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID назначения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssignmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Назначение обновлено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedVacancyRecruiterDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Назначение не найдено"
+          }
+        },
+        "summary": "Обновить назначение (все поля статистики)",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      },
+      "delete": {
+        "operationId": "AssignmentController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID назначения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Назначение удалено"
+          },
+          "404": {
+            "description": "Назначение не найдено"
+          }
+        },
+        "summary": "Удалить назначение рекрутера с вакансии",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      }
+    },
+    "/api/v1/assignments/{id}/resume-stats": {
+      "patch": {
+        "description": "Позволяет инкрементально добавлять отправленные/принятые/отклоненные резюме",
+        "operationId": "AssignmentController_updateResumeStats",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID назначения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateResumeStatsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Статистика обновлена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedVacancyRecruiterDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Назначение не найдено"
+          }
+        },
+        "summary": "Обновить статистику резюме (инкрементально)",
+        "tags": ["Назначения рекрутеров на вакансии"]
+      }
+    }
+  },
+  "info": {
+    "title": "VIO Stats Service API",
+    "description": "API для управления компаниями, рекрутерами и вакансиями",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Компании (Клиенты)",
+      "description": "Управление компаниями-клиентами"
+    },
+    {
+      "name": "Рекрутеры",
+      "description": "Управление рекрутерами"
+    },
+    {
+      "name": "Вакансии",
+      "description": "Управление вакансиями"
+    },
+    {
+      "name": "Назначения рекрутеров на вакансии",
+      "description": "Управление назначениями и статистикой работы рекрутеров"
+    }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "CreateCompanyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Название компании",
+            "example": "ООО Рога и Копыта"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email компании",
+            "example": "info@company.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании",
+            "example": "+7 999 999 99 99"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес компании",
+            "example": "г. Москва, ул. Ленина, д. 1"
+          }
+        },
+        "required": ["name"]
+      },
+      "CompanyEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор компании"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название компании"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email компании"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес компании"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "UpdateCompanyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Название компании",
+            "example": "ООО Рога и Копыта"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email компании",
+            "example": "info@company.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании",
+            "example": "+7 999 999 99 99"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес компании",
+            "example": "г. Москва, ул. Ленина, д. 1"
+          }
+        }
+      },
+      "CreateRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера",
+            "example": "Иван"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера",
+            "example": "Иванов"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email рекрутера",
+            "example": "ivan@company.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон рекрутера",
+            "example": "+7 999 123 45 67"
+          }
+        },
+        "required": ["firstName", "lastName", "email"]
+      },
+      "RecruiterEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор рекрутера"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email рекрутера"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон рекрутера"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "firstName", "lastName", "email", "createdAt", "updatedAt"]
+      },
+      "UpdateRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера",
+            "example": "Иван"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера",
+            "example": "Иванов"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email рекрутера",
+            "example": "ivan@company.com"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон рекрутера",
+            "example": "+7 999 123 45 67"
+          }
+        }
+      },
+      "CreateVacancyDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название вакансии",
+            "example": "Senior Backend Developer"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание вакансии",
+            "example": "Разработка backend сервисов на Node.js"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Дедлайн по вакансии",
+            "example": "2026-03-01T00:00:00.000Z"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "ID компании-клиента",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": ["title", "companyId"]
+      },
+      "VacancyEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор вакансии"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название вакансии"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание вакансии"
+          },
+          "deadline": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дедлайн по вакансии"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "ID компании-клиента"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "title", "companyId", "createdAt", "updatedAt"]
+      },
+      "UpdateVacancyDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название вакансии",
+            "example": "Senior Backend Developer"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание вакансии",
+            "example": "Разработка backend сервисов на Node.js"
+          },
+          "deadline": {
+            "type": "string",
+            "description": "Дедлайн по вакансии",
+            "example": "2026-03-01T00:00:00.000Z"
+          }
+        }
+      },
+      "CreateAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "recruiterId": {
+            "type": "string",
+            "description": "ID рекрутера",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "vacancyId": {
+            "type": "string",
+            "description": "ID вакансии",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "requiredResumes": {
+            "type": "number",
+            "description": "Количество необходимых резюме",
+            "example": 10,
+            "default": 0
+          }
+        },
+        "required": ["recruiterId", "vacancyId", "requiredResumes"]
+      },
+      "AssignedRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Идентификатор рекрутера, назначенного на вакансию"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера, назначенного на вакансию"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера, назначенного на вакансию"
+          },
+          "email": {
+            "type": "string",
+            "description": "email рекрутера, назначенного на вакансию"
+          }
+        },
+        "required": ["id", "firstName", "lastName", "email"]
+      },
+      "CompanyAssignedVacancyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Идентификатор компании-клиента, ваканасия от которого была назначена на рекрутера"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название компании-клиента, ваканасия от которого была назначена на рекрутера"
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "AssignedVacancyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "deadline": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyAssignedVacancyDto"
+          }
+        },
+        "required": ["id", "title", "deadline", "company"]
+      },
+      "AssignedVacancyRecruiterDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор назначения"
+          },
+          "recruiterId": {
+            "type": "string",
+            "description": "ID рекрутера"
+          },
+          "vacancyId": {
+            "type": "string",
+            "description": "ID вакансии"
+          },
+          "requiredResumes": {
+            "type": "number",
+            "description": "Количество необходимых резюме"
+          },
+          "sentResumes": {
+            "type": "number",
+            "description": "Количество отправленных резюме"
+          },
+          "acceptedResumes": {
+            "type": "number",
+            "description": "Количество принятых резюме"
+          },
+          "rejectedResumes": {
+            "type": "number",
+            "description": "Количество отклоненных резюме"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          },
+          "recruiter": {
+            "$ref": "#/components/schemas/AssignedRecruiterDto"
+          },
+          "vacancy": {
+            "$ref": "#/components/schemas/AssignedVacancyDto"
+          }
+        },
+        "required": [
+          "id",
+          "recruiterId",
+          "vacancyId",
+          "requiredResumes",
+          "sentResumes",
+          "acceptedResumes",
+          "rejectedResumes",
+          "createdAt",
+          "updatedAt",
+          "recruiter",
+          "vacancy"
+        ]
+      },
+      "UpdateAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "requiredResumes": {
+            "type": "number",
+            "description": "Количество необходимых резюме",
+            "example": 10
+          },
+          "sentResumes": {
+            "type": "number",
+            "description": "Количество отправленных резюме",
+            "example": 5
+          },
+          "acceptedResumes": {
+            "type": "number",
+            "description": "Количество принятых резюме",
+            "example": 3
+          },
+          "rejectedResumes": {
+            "type": "number",
+            "description": "Количество отклоненных резюме",
+            "example": 2
+          }
+        }
+      },
+      "UpdateResumeStatsDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Тип действия с резюме",
+            "enum": ["sent", "accepted", "rejected"],
+            "example": "sent"
+          },
+          "count": {
+            "type": "number",
+            "description": "Количество резюме для добавления",
+            "example": 1,
+            "default": 1
+          }
+        },
+        "required": ["action", "count"]
+      }
+    }
+  },
+  "security": [
+    {
+      "basic": []
+    }
+  ]
+}
