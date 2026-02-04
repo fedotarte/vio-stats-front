@@ -19,7 +19,7 @@ jobs:
 
       - name: Install & Build
         env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || '/api' }}
+          VITE_API_URL: ${{ vars.VITE_API_URL || '/' }}
         run: |
           npm install
           npm run build
