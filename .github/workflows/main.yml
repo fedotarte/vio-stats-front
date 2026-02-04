@@ -12,9 +12,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install & Build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL || '/api' }}
         run: |
           npm install
-          npm run build # Vite создаст папку dist/
+          npm run build
 
       - name: Deploy to Server
         uses: appleboy/scp-action@v0.1.7
