@@ -6,14 +6,32 @@ html,
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Уменьшает задержку тапов и предотвращает двойной тап-зум на кнопках */
+  touch-action: manipulation;
+}
+
+html {
+  /* Не даём странице скроллиться в «белые» зоны при overscroll на iOS/Android */
+  overscroll-behavior: none;
 }
 
 body {
   background-color: #f8f9fa;
+  position: relative;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Убираем подсветку тапа на мобильных для более нативного вида */
+@media (hover: none) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }

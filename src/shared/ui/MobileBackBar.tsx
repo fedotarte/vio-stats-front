@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, useMantineTheme } from '@mantine/core';
@@ -26,35 +27,34 @@ export const MobileBackBar = ({ to, label = 'Назад', fixed = false }: Mobil
 
   if (!isMobile) return null;
 
-  const baseStyles: React.CSSProperties = {
-    padding: theme.spacing.xs,
-    // paddingBottom: `max(${theme.spacing.md}px, env(safe-area-inset-bottom))`,
+  const barContentHeight = 56;
+  const safeBottom = 'env(safe-area-inset-bottom, 0px)';
+
+  const baseStyles: CSSProperties = {
+    minHeight: barContentHeight,
+    paddingLeft: theme.spacing.xs,
+    paddingRight: theme.spacing.xs,
+    paddingBottom: `max(${theme.spacing.xs}px, ${safeBottom})`,
+    boxSizing: 'content-box',
     backgroundColor: 'var(--mantine-color-body)',
     borderTop: '1px solid var(--mantine-color-default-border)',
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'flex-start',
+    flexShrink: 0,
   };
 
+  const wrapperStyle: CSSProperties = fixed
+    ? { ...baseStyles, position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100 }
+    : baseStyles;
+
   return (
-    <Box
-      style={
-        fixed
-          ? {
-              ...baseStyles,
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              zIndex: 100,
-            }
-          : { ...baseStyles, flexShrink: 0 }
-      }
-    >
+    <Box style={wrapperStyle}>
       <Button
         variant="light"
         leftSection={<IconArrowLeft size={20} />}
         onClick={() => navigate(to)}
-        style={{ width: '30%', minWidth: 100 }}
+        style={{ width: '30%', minWidth: 100, maxWidth: 160, flexShrink: 0 }}
       >
         {label}
       </Button>

@@ -32,8 +32,8 @@ import {
 } from '../../../shared/api/generated/endpoints';
 import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
 import { ROUTES } from '../../../shared/config/routes';
-import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
 import type { VacancyEntity } from '../../../shared/types';
+import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
 
 const RecruiterDetailPage = () => {
   const theme = useMantineTheme();
@@ -164,15 +164,10 @@ const RecruiterDetailPage = () => {
   const vacanciesSection = (
     <>
       {selectedCompanyId && (filteredRecruiterVacancies ?? []).length > 0 && (
-        <>
-          <Title order={3} mb="md">
-            Вакансии
-          </Title>
-          <RecruiterVacanciesList
-            recruiterVacancies={filteredRecruiterVacancies ?? []}
-            onVacancyClick={handleVacancyClick}
-          />
-        </>
+        <RecruiterVacanciesList
+          recruiterVacancies={filteredRecruiterVacancies ?? []}
+          onVacancyClick={handleVacancyClick}
+        />
       )}
       {selectedCompanyId && (filteredRecruiterVacancies ?? [])?.length === 0 && (
         <Text c="dimmed" ta="center">
@@ -182,205 +177,169 @@ const RecruiterDetailPage = () => {
     </>
   );
 
+  const mobileBottomPadding = isMobile
+    ? `calc(${theme.spacing.xl}px + 56px + env(safe-area-inset-bottom, 0px))`
+    : undefined;
+
   return (
     <>
-      <Box
-        style={
-          isMobile
-            ? {
-                height: '100dvh',
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-              }
-            : undefined
-        }
-      >
-        {/* Верхняя часть: нав + стики-плашка + селект — на мобиле не скроллится */}
-        <Box style={isMobile ? { flexShrink: 0 } : undefined}>
-          <Container size="md" py={isMobile ? 'sm' : 'xl'}>
-            {!isMobile && (
-              <Button
-                onClick={() => navigate(ROUTES.recruiters.root)}
-                leftSection={<IconArrowLeft size={16} />}
-                variant="subtle"
-                mb="md"
-              >
-                Назад к списку рекрутеров
-              </Button>
-            )}
-
-            <Paper
-              shadow="sm"
-              p={isMobile ? 'sm' : 'lg'}
-              withBorder
-              mb={isMobile ? 'sm' : 'xl'}
-              style={
-                isMobile
-                  ? {
-                      position: 'sticky',
-                      top: 0,
-                      zIndex: 10,
-                      backgroundColor: 'var(--mantine-color-body)',
-                    }
-                  : undefined
-              }
+      <Box>
+        <Container
+          size="md"
+          py={isMobile ? 'sm' : 'xl'}
+          style={isMobile ? { paddingBottom: mobileBottomPadding } : undefined}
+        >
+          {!isMobile && (
+            <Button
+              onClick={() => navigate(ROUTES.recruiters.root)}
+              leftSection={<IconArrowLeft size={16} />}
+              variant="subtle"
+              mb="md"
             >
-              <Stack gap={isMobile ? 'xs' : 'md'}>
-                <Group justify="space-between" align="flex-start" wrap="nowrap">
-                  <Stack gap={4} style={{ minWidth: 0 }}>
-                    <Title order={isMobile ? 2 : 1}>{fullName}</Title>
+              Назад к списку рекрутеров
+            </Button>
+          )}
+
+          <Paper
+            shadow="sm"
+            p={isMobile ? 'xs' : 'lg'}
+            withBorder
+            mb={isMobile ? 'xs' : 'xl'}
+            style={isMobile ? { position: 'static' } : undefined}
+          >
+            <Stack gap={isMobile ? 6 : 'md'}>
+              <Group justify="space-between" align="flex-start" wrap="nowrap">
+                <Stack gap={4} style={{ minWidth: 0 }}>
+                  <Title order={isMobile ? 2 : 1}>{fullName}</Title>
+                  <Text c="dimmed" size={isMobile ? 'xs' : 'sm'}>
+                    {recruiter.email}
+                  </Text>
+                  {recruiter.phone && (
                     <Text c="dimmed" size={isMobile ? 'xs' : 'sm'}>
-                      {recruiter.email}
+                      {recruiter.phone}
                     </Text>
-                    {recruiter.phone && (
-                      <Text c="dimmed" size={isMobile ? 'xs' : 'sm'}>
-                        {recruiter.phone}
-                      </Text>
-                    )}
-                  </Stack>
-                  <ActionIcon
-                    variant="subtle"
-                    color="violet"
-                    size="xl"
-                    onClick={() => navigate(ROUTES.recruiters.edit(recruiterId ?? ''))}
-                    aria-label="Редактировать рекрутера"
-                  >
-                    <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                  </ActionIcon>
-                </Group>
-
-                <Flex
-                  direction={{ base: 'column', sm: 'row' }}
-                  gap={{ base: 'xs', sm: 'xl' }}
-                  mt={isMobile ? 'xs' : 'md'}
-                  align={{ base: 'stretch', sm: 'center' }}
-                  justify={{ base: 'center', sm: 'start' }}
+                  )}
+                </Stack>
+                <ActionIcon
+                  variant="subtle"
+                  color="violet"
+                  size="xl"
+                  onClick={() => navigate(ROUTES.recruiters.edit(recruiterId ?? ''))}
+                  aria-label="Редактировать рекрутера"
                 >
-                  <Flex
-                    justify={{ base: 'space-between', sm: 'flex-start' }}
-                    align="center"
-                    gap="sm"
-                  >
-                    <Text size="sm" c="dimmed">
-                      Вакансий в работе:
-                    </Text>
-                    <Text size="sm" fw={700}>
-                      {stats.activeVacancies}
-                    </Text>
-                  </Flex>
-                  <Flex
-                    justify={{ base: 'space-between', sm: 'flex-start' }}
-                    align="center"
-                    gap="sm"
-                    style={{ flex: 1 }}
-                  >
-                    <Text size="sm" c="dimmed">
-                      Осталось отправить резюме:
-                    </Text>
-                    <Text size="sm" fw={700} c={stats.remainingResumes > 0 ? 'orange' : 'green'}>
-                      {stats.remainingResumes}
-                    </Text>
-                  </Flex>
+                  <IconPencil style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                </ActionIcon>
+              </Group>
+
+              <Flex
+                direction={{ base: 'column', sm: 'row' }}
+                gap={{ base: 6, sm: 'xl' }}
+                mt={isMobile ? 4 : 'md'}
+                align={{ base: 'stretch', sm: 'center' }}
+                justify={{ base: 'center', sm: 'start' }}
+              >
+                <Flex justify={{ base: 'space-between', sm: 'flex-start' }} align="center" gap="sm">
+                  <Text size="sm" c="dimmed">
+                    Вакансий в работе:
+                  </Text>
+                  <Text size="sm" fw={700}>
+                    {stats.activeVacancies}
+                  </Text>
                 </Flex>
-
-                <Group
-                  gap={isMobile ? 'sm' : 'lg'}
-                  mt={isMobile ? 'xs' : 'md'}
-                  justify="space-between"
+                <Flex
+                  justify={{ base: 'space-between', sm: 'flex-start' }}
+                  align="center"
+                  gap="sm"
+                  style={{ flex: 1 }}
                 >
-                  <Stack gap={4} align="center">
-                    <RingProgress
-                      size={isMobile ? 72 : 100}
-                      thickness={isMobile ? 8 : 10}
-                      sections={[
-                        {
-                          value: stats.efficiencyPercent,
-                          color: getProgressColor(stats.efficiencyPercent),
-                        },
-                      ]}
-                      label={
-                        <Text fw={700} size={isMobile ? 'xs' : 'sm'} ta="center">
-                          {stats.efficiencyPercent}%
-                        </Text>
-                      }
-                    />
-                    <Text size="xs" fw={500}>
-                      Общая эффективность
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {stats.totalSent} / {stats.totalRequired}
-                    </Text>
-                  </Stack>
-                  <Stack gap={4} align="center">
-                    <RingProgress
-                      size={isMobile ? 72 : 100}
-                      thickness={isMobile ? 8 : 10}
-                      sections={[
-                        {
-                          value: stats.relevancePercent,
-                          color: getProgressColor(stats.relevancePercent),
-                        },
-                      ]}
-                      label={
-                        <Text fw={700} size={isMobile ? 'xs' : 'sm'} ta="center">
-                          {stats.relevancePercent}%
-                        </Text>
-                      }
-                    />
-                    <Text size="xs" fw={500}>
-                      Общая релевантность
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {stats.totalAccepted} / {stats.totalSent}
-                    </Text>
-                  </Stack>
-                </Group>
-              </Stack>
-            </Paper>
+                  <Text size="sm" c="dimmed">
+                    Осталось отправить резюме:
+                  </Text>
+                  <Text size="sm" fw={700} c={stats.remainingResumes > 0 ? 'orange' : 'green'}>
+                    {stats.remainingResumes}
+                  </Text>
+                </Flex>
+              </Flex>
 
-            <Space h={isMobile ? 'sm' : 'xl'} />
-            <CompanySelect
-              companies={recruiterCompanies ?? []}
-              value={selectedCompanyId}
-              onChange={(v) => setSelectedCompanyId(v ?? '0')}
-            />
-
-            {!isMobile && (
-              <>
-                <Space h="xl" />
-                <Group>
-                  <Button>Выгрузить сводку</Button>
-                  <Select
-                    placeholder="В разрезе:"
-                    data={[
-                      { label: 'За месяц', value: 'За месяц' },
-                      { label: 'За неделю', value: 'За неделю' },
+              <Group gap={isMobile ? 'xs' : 'lg'} mt={isMobile ? 4 : 'md'} justify="space-between">
+                <Stack gap={4} align="center">
+                  <RingProgress
+                    size={isMobile ? 72 : 100}
+                    thickness={isMobile ? 8 : 10}
+                    sections={[
+                      {
+                        value: stats.efficiencyPercent,
+                        color: getProgressColor(stats.efficiencyPercent),
+                      },
                     ]}
+                    label={
+                      <Text fw={700} size={isMobile ? 'xs' : 'sm'} ta="center">
+                        {stats.efficiencyPercent}%
+                      </Text>
+                    }
                   />
-                </Group>
-              </>
-            )}
+                  <Text size="xs" fw={500}>
+                    Общая эффективность
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {stats.totalSent} / {stats.totalRequired}
+                  </Text>
+                </Stack>
+                <Stack gap={4} align="center">
+                  <RingProgress
+                    size={isMobile ? 72 : 100}
+                    thickness={isMobile ? 8 : 10}
+                    sections={[
+                      {
+                        value: stats.relevancePercent,
+                        color: getProgressColor(stats.relevancePercent),
+                      },
+                    ]}
+                    label={
+                      <Text fw={700} size={isMobile ? 'xs' : 'sm'} ta="center">
+                        {stats.relevancePercent}%
+                      </Text>
+                    }
+                  />
+                  <Text size="xs" fw={500}>
+                    Общая релевантность
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {stats.totalAccepted} / {stats.totalSent}
+                  </Text>
+                </Stack>
+              </Group>
+            </Stack>
+          </Paper>
 
-            <Space h={isMobile ? 'sm' : 'xl'} />
+          <Space h={isMobile ? 'xs' : 'xl'} />
+          <CompanySelect
+            companies={recruiterCompanies ?? []}
+            value={selectedCompanyId}
+            onChange={(v) => setSelectedCompanyId(v ?? '0')}
+          />
 
-            {/* На десктопе список вакансий здесь */}
-            {!isMobile && vacanciesSection}
-          </Container>
-        </Box>
+          {!isMobile && (
+            <>
+              <Space h="xl" />
+              <Group>
+                <Button>Выгрузить сводку</Button>
+                <Select
+                  placeholder="В разрезе:"
+                  data={[
+                    { label: 'За месяц', value: 'За месяц' },
+                    { label: 'За неделю', value: 'За неделю' },
+                  ]}
+                />
+              </Group>
+            </>
+          )}
 
-        {/* На мобиле: единственная область прокрутки = список вакансий (высота = 100dvh минус верхний блок) */}
-        {isMobile && (
-          <Box style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
-            <Container size="md" py="sm">
-              {vacanciesSection}
-            </Container>
-          </Box>
-        )}
+          <Space h={isMobile ? 'xs' : 'xl'} />
+          {vacanciesSection}
+        </Container>
 
-        {isMobile && (
-          <MobileBackBar to={ROUTES.recruiters.root} label="Назад" />
-        )}
+        {isMobile && <MobileBackBar to={ROUTES.recruiters.root} label="Назад" fixed />}
       </Box>
 
       <AssignmentDrawer

@@ -19,4 +19,34 @@ export const theme = createTheme({
     myColor,
   },
   primaryColor: 'myColor',
+  components: {
+    TextInput: {
+      styles: () => ({
+        input: {
+          fontSize: '16px',
+        },
+      }),
+    },
+    Textarea: {
+      styles: () => ({
+        input: {
+          fontSize: '16px',
+        },
+      }),
+    },
+    Select: {
+      styles: () => ({
+        input: {
+          fontSize: '16px',
+        },
+      }),
+    },
+    NumberInput: {
+      styles: () => ({
+        input: {
+          fontSize: '16px',
+        },
+      }),
+    },
+  },
 });
