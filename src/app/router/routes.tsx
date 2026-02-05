@@ -34,28 +34,56 @@ const homeRoute = (
   ],
 });
 
+const buildPath = (basePath: string, fullPath: string) => {
+  if (!fullPath.startsWith(basePath)) {
+    return fullPath;
+  }
+  return fullPath.slice(basePath.length).replace(/^\//, '');
+};
+
 export const appRoutes: RouteObject[] = [
   { path: ROUTES.root, element: <Navigate to={ROUTES.recruiters.root} replace /> },
   {
     path: ROUTES.recruiters.detail(),
     element: <RecruiterDetailPage />,
     children: [
-      { path: 'edit', element: <RecruiterEditDrawerRoute /> },
-      { path: 'assignments/:assignmentId', element: <RecruiterAssignmentDrawerRoute /> },
+      {
+        path: buildPath(ROUTES.recruiters.detail(), ROUTES.recruiters.edit()),
+        element: <RecruiterEditDrawerRoute />,
+      },
+      {
+        path: buildPath(ROUTES.recruiters.detail(), ROUTES.recruiters.assignment()),
+        element: <RecruiterAssignmentDrawerRoute />,
+      },
     ],
   },
   homeRoute(ROUTES.recruiters.root, <RecruitersPage />, [
-    { path: 'create', element: <CreateRecruiterDrawerRoute /> },
+    {
+      path: buildPath(ROUTES.recruiters.root, ROUTES.recruiters.create),
+      element: <CreateRecruiterDrawerRoute />,
+    },
   ]),
   homeRoute(ROUTES.vacancies.root, <VacanciesPage />, [
-    { path: 'create', element: <CreateVacancyDrawerRoute /> },
-    { path: ':id/edit', element: <VacancyEditDrawerRoute /> },
-    { path: ':id', element: <VacancyDrawerRoute /> },
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.create),
+      element: <CreateVacancyDrawerRoute />,
+    },
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.edit()),
+      element: <VacancyEditDrawerRoute />,
+    },
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.detail()),
+      element: <VacancyDrawerRoute />,
+    },
   ]),
   homeRoute(ROUTES.clients.root, <ClientsPage />, [
-    { path: 'create', element: <CreateClientDrawerRoute /> },
+    {
+      path: buildPath(ROUTES.clients.root, ROUTES.clients.create),
+      element: <CreateClientDrawerRoute />,
+    },
   ]),
-  { path: 'company/:companyId/edit', element: <CompanyEditPage /> },
-  { path: 'company/:companyId', element: <CompanyDetailRedirect /> },
+  { path: ROUTES.company.edit(), element: <CompanyEditPage /> },
+  { path: ROUTES.company.detail(), element: <CompanyDetailRedirect /> },
   { path: '*', element: <Navigate to={ROUTES.recruiters.root} replace /> },
 ];

@@ -1,2 +1,2 @@
 export { default as CompanyEditPage } from './ui/CompanyEditPage';
-export { CompanyDetailRedirect } from './ui/CompanyDetailRedirect';
+export { default as CompanyDetailRedirect } from './ui/CompanyDetailRedirect';

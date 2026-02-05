@@ -28,12 +28,7 @@ export const VacancyDrawerRoute = lazy(
 export const VacancyEditDrawerRoute = lazy(
   () => import('@/pages/vacancies/ui/VacancyEditDrawerRoute')
 );
-export const CompanyEditPage = lazy(
-  () => import('@/pages/company-edit/ui/CompanyEditPage').then((m) => ({ default: m.default }))
-);
+export const CompanyEditPage = lazy(() => import('@/pages/company-edit/ui/CompanyEditPage'));
 export const CompanyDetailRedirect = lazy(
-  () =>
-    import('@/pages/company-edit/ui/CompanyDetailRedirect').then((m) => ({
-      default: m.CompanyDetailRedirect,
-    }))
+  () => import('@/pages/company-edit/ui/CompanyDetailRedirect')
 );
