@@ -1,17 +1,36 @@
 import { useCallback, useEffect, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { HttpStatusCode, type AxiosError } from 'axios';
-import { Button, Modal, PasswordInput, Stack, Text, TextInput } from '@mantine/core';
+import { Button, Modal, PasswordInput, Stack, Text, TextInput, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { AXIOS_INSTANCE } from '../api/axios-instance';
 import { AuthContext } from './AuthContext';
 
 const AUTH_STORAGE_KEY = 'vio_stats_auth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const resetViewportZoom = useCallback(() => {
+    const activeElement = document.activeElement as HTMLElement | null;
+    activeElement?.blur();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+
+    const metaViewport = document.querySelector('meta[name="viewport"]');
+    if (!metaViewport) return;
+    const previousContent = metaViewport.getAttribute('content');
+    metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+    if (previousContent) {
+      window.setTimeout(() => {
+        metaViewport.setAttribute('content', previousContent);
+      }, 0);
+    }
+  }, []);
 
   useEffect(() => {
     const savedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -71,8 +90,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUsername('');
     setPassword('');
 
+    resetViewportZoom();
     window.location.reload();
-  }, [username, password]);
+  }, [username, password, resetViewportZoom]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -106,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             value={username}
             onChange={(e) => setUsername(e.currentTarget.value)}
             onKeyDown={handleKeyDown}
-            autoFocus
+            autoFocus={!isMobile}
           />
 
           <PasswordInput
