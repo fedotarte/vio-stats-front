@@ -1,27 +1,45 @@
-import { lazy } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from '../../shared/config/routes';
+import {
+  ClientsPage,
+  CompanyDetailRedirect,
+  CompanyEditPage,
+  CreateClientDrawerRoute,
+  CreateRecruiterDrawerRoute,
+  CreateVacancyDrawerRoute,
+  HomePage,
+  RecruiterAssignmentDrawerRoute,
+  RecruiterDetailPage,
+  RecruiterEditDrawerRoute,
+  RecruitersPage,
+  VacanciesPage,
+  VacancyDrawerRoute,
+  VacancyEditDrawerRoute,
+} from '.';
 
-const HomePage = lazy(() => import('../../pages/home/ui/HomePage'));
-const RecruiterDetailPage = lazy(
-  () => import('../../pages/recruiter-detail/ui/RecruiterDetailPage')
-);
-const CompanyEditPage = lazy(
-  () => import('../../pages/company-edit/ui/CompanyEditPage').then((m) => ({ default: m.default }))
-);
-const CompanyDetailRedirect = lazy(
-  () =>
-    import('../../pages/company-edit/ui/CompanyDetailRedirect').then((m) => ({
-      default: m.CompanyDetailRedirect,
-    }))
-);
-
-const homeRoute = (path: string, children?: RouteObject[]): RouteObject => ({
+const homeRoute = (
+  path: string,
+  indexElement: RouteObject['element'],
+  children?: RouteObject[]
+): RouteObject => ({
   path,
   element: <HomePage />,
-  children,
+  children: [
+    {
+      path: '',
+      element: indexElement,
+      children,
+    },
+  ],
 });
+
+const buildPath = (basePath: string, fullPath: string) => {
+  if (!fullPath.startsWith(basePath)) {
+    return fullPath;
+  }
+  return fullPath.slice(basePath.length).replace(/^\//, '');
+};
 
 export const appRoutes: RouteObject[] = [
   { path: ROUTES.root, element: <Navigate to={ROUTES.recruiters.root} replace /> },
@@ -29,17 +47,43 @@ export const appRoutes: RouteObject[] = [
     path: ROUTES.recruiters.detail(),
     element: <RecruiterDetailPage />,
     children: [
-      { path: 'edit', element: null },
-      { path: 'assignments/:assignmentId', element: <RecruiterDetailPage /> },
+      {
+        path: buildPath(ROUTES.recruiters.detail(), ROUTES.recruiters.edit()),
+        element: <RecruiterEditDrawerRoute />,
+      },
+      {
+        path: buildPath(ROUTES.recruiters.detail(), ROUTES.recruiters.assignment()),
+        element: <RecruiterAssignmentDrawerRoute />,
+      },
     ],
   },
-  homeRoute(ROUTES.recruiters.root, [{ path: 'create', element: null }]),
-  homeRoute(ROUTES.vacancies.root, [
-    { path: 'create', element: null },
-    { path: ':id', element: null, children: [{ path: 'edit', element: null }] },
+  homeRoute(ROUTES.recruiters.root, <RecruitersPage />, [
+    {
+      path: buildPath(ROUTES.recruiters.root, ROUTES.recruiters.create),
+      element: <CreateRecruiterDrawerRoute />,
+    },
   ]),
-  homeRoute(ROUTES.clients.root, [{ path: 'create', element: null }]),
-  { path: 'company/:companyId/edit', element: <CompanyEditPage /> },
-  { path: 'company/:companyId', element: <CompanyDetailRedirect /> },
+  homeRoute(ROUTES.vacancies.root, <VacanciesPage />, [
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.create),
+      element: <CreateVacancyDrawerRoute />,
+    },
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.edit()),
+      element: <VacancyEditDrawerRoute />,
+    },
+    {
+      path: buildPath(ROUTES.vacancies.root, ROUTES.vacancies.detail()),
+      element: <VacancyDrawerRoute />,
+    },
+  ]),
+  homeRoute(ROUTES.clients.root, <ClientsPage />, [
+    {
+      path: buildPath(ROUTES.clients.root, ROUTES.clients.create),
+      element: <CreateClientDrawerRoute />,
+    },
+  ]),
+  { path: ROUTES.company.edit(), element: <CompanyEditPage /> },
+  { path: ROUTES.company.detail(), element: <CompanyDetailRedirect /> },
   { path: '*', element: <Navigate to={ROUTES.recruiters.root} replace /> },
 ];

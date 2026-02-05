@@ -1,18 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  Badge,
-  Button,
-  Drawer,
-  Group,
-  Loader,
-  NumberInput,
-  Stack,
-  Text,
-  useMantineTheme,
-} from '@mantine/core';
+import { Badge, Button, Group, Loader, NumberInput, Stack, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
   getAssignmentControllerFindAllQueryKey,
@@ -22,6 +11,7 @@ import {
 } from '../../../shared/api/generated/endpoints';
 import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
 import type { UpdateAssignmentDto } from '../../../shared/api/generated/models/updateAssignmentDto';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface AssignmentDrawerProps {
   assignmentId: string | null;
@@ -45,8 +35,6 @@ export const AssignmentDrawer = ({
   onCloseAssignmentDrawer,
   initialEditing = false,
 }: AssignmentDrawerProps) => {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(initialEditing);
 
@@ -136,41 +124,18 @@ export const AssignmentDrawer = ({
   };
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={() => {
         setIsEditing(false);
         onCloseAssignmentDrawer();
       }}
       title={isEditing ? 'Редактирование назначения' : 'Просмотр назначения'}
-      padding={isMobile ? 'lg' : 'md'}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? '70%' : 'md'}
-      transitionProps={{
-        transition: 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      styles={
-        isMobile
-          ? {
-              inner: {
-                height: 'auto',
-              },
-              content: {
-                height: 'fit-content',
-                maxHeight: '90vh',
-              },
-            }
-          : undefined
-      }
+      mobileSize="70%"
+      desktopSize="md"
+      mobilePadding="lg"
+      desktopPadding="md"
+      transitionProps={{ transition: 'slide-left', duration: 200, timingFunction: 'ease' }}
     >
       {!assignment ? null : isFetching ? (
         <Loader color="violet" />
@@ -262,6 +227,6 @@ export const AssignmentDrawer = ({
           </Stack>
         </form>
       )}
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

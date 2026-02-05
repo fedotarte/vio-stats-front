@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Center, Loader, Space, Text, Title } from '@mantine/core';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { Space, Title } from '@mantine/core';
 import { SearchRecruiter } from '../../../features/search-recruiter';
 import { useRecruiterControllerFindAll } from '../../../shared/api/generated/endpoints';
 import { ROUTES } from '../../../shared/config/routes';
+import { CenteredError, CenteredLoader } from '../../../shared/ui/CenteredState';
 import { RecruitersList } from '../../../widgets/recruiters-list';
 
-export const RecruitersPage = () => {
+const RecruitersPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
@@ -29,19 +30,11 @@ export const RecruitersPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <Center h={200}>
-        <Loader size="lg" />
-      </Center>
-    );
+    return <CenteredLoader />;
   }
 
   if (error) {
-    return (
-      <Center h={200}>
-        <Text c="red">Ошибка загрузки рекрутеров</Text>
-      </Center>
-    );
+    return <CenteredError message="Ошибка загрузки рекрутеров" />;
   }
 
   return (
@@ -52,6 +45,9 @@ export const RecruitersPage = () => {
       <SearchRecruiter value={searchQuery} onChange={setSearchQuery} />
       <Space h="sm" />
       <RecruitersList recruiters={filteredRecruiters} onRecruiterClick={handleRecruiterClick} />
+      <Outlet />
     </>
   );
 };
+
+export default RecruitersPage;

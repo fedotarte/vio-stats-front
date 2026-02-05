@@ -5,8 +5,10 @@ import { ROUTES } from '../../../shared/config/routes';
  * Редирект с /company/:companyId на /company/:companyId/edit,
  * чтобы деталка компании сразу открывалась в режиме редактирования.
  */
-export const CompanyDetailRedirect = () => {
+const CompanyDetailRedirect = () => {
   const { companyId } = useParams<{ companyId: string }>();
   if (!companyId) return null;
   return <Navigate to={ROUTES.company.edit(companyId)} replace />;
 };
+
+export default CompanyDetailRedirect;

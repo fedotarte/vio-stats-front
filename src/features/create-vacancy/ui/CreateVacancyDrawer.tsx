@@ -4,7 +4,6 @@ import { IconCheck } from '@tabler/icons-react';
 import {
   Avatar,
   Button,
-  Drawer,
   Group,
   Loader,
   MultiSelect,
@@ -29,6 +28,7 @@ import {
   useVacancyControllerCreate,
 } from '../../../shared/api/generated/endpoints';
 import type { CreateVacancyDto, RecruiterEntity } from '../../../shared/types';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface CreateVacancyDrawerProps {
   opened: boolean;
@@ -181,38 +181,15 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
   const isPending = isVacancyAssigning || isVacancyCreating;
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={handleCancel}
       title="Создание вакансии"
-      padding={isMobile ? 'lg' : 'md'}
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? '70%' : 'md'}
-      transitionProps={{
-        transition: 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      styles={
-        isMobile
-          ? {
-              inner: {
-                height: 'auto',
-              },
-              content: {
-                height: 'fit-content',
-                maxHeight: '90vh',
-              },
-            }
-          : undefined
-      }
+      mobileSize="70%"
+      desktopSize="md"
+      mobilePadding="lg"
+      desktopPadding="md"
+      transitionProps={{ transition: 'slide-left', duration: 200, timingFunction: 'ease' }}
     >
       {isFetching ? (
         <Loader color="violet" />
@@ -289,6 +266,6 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
           </Stack>
         </form>
       )}
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

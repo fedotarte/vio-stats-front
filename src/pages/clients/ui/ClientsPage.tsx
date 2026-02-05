@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Center, Loader, Space, Text, Title } from '@mantine/core';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { Space, Title } from '@mantine/core';
 import { SearchCompany } from '../../../features/search-company/ui/SearchCompany.tsx';
 import { useCompanyControllerFindAll } from '../../../shared/api/generated/endpoints';
 import { ROUTES } from '../../../shared/config/routes';
+import { CenteredError, CenteredLoader } from '../../../shared/ui/CenteredState';
 import { CompaniesList } from '../../../widgets/companies-list';
 
-export const ClientsPage = () => {
+const ClientsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
@@ -30,18 +31,10 @@ export const ClientsPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <Center h={200}>
-        <Loader size="lg" />
-      </Center>
-    );
+    return <CenteredLoader />;
   }
   if (error) {
-    return (
-      <Center h={200}>
-        <Text c="red">Ошибка загрузки рекрутеров</Text>
-      </Center>
-    );
+    return <CenteredError message="Ошибка загрузки рекрутеров" />;
   }
   return (
     <>
@@ -51,6 +44,9 @@ export const ClientsPage = () => {
       <SearchCompany value={searchQuery} onChange={setSearchQuery} />
       <Space h="sm" />
       <CompaniesList companies={filteredCompanies} onCompanyClick={handleCompanyClick} />
+      <Outlet />
     </>
   );
 };
+
+export default ClientsPage;

@@ -1,15 +1,13 @@
 import { useMemo, useState } from 'react';
 import { IconArrowLeft, IconPencil } from '@tabler/icons-react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import {
   ActionIcon,
   Box,
   Button,
-  Center,
   Container,
   Flex,
   Group,
-  Loader,
   Paper,
   RingProgress,
   Select,
@@ -23,8 +21,6 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { CompanySelect } from '../../../entities/company';
 import { RecruiterVacanciesList } from '../../../entities/vacancy';
-import { AssignmentDrawer } from '../../../features/edit-assignment';
-import { EditRecruiterDrawer } from '../../../features/edit-recruiter';
 import {
   useAssignmentControllerFindAll,
   useCompanyControllerFindAll,
@@ -33,18 +29,17 @@ import {
 import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
 import { ROUTES } from '../../../shared/config/routes';
 import type { VacancyEntity } from '../../../shared/types';
+import { CenteredLoader } from '../../../shared/ui/CenteredState';
 import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
+import type { RecruiterDetailOutletContext } from '../model/route-context';
 
 const RecruiterDetailPage = () => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const { recruiterId, assignmentId } = useParams<{ recruiterId: string; assignmentId: string }>();
+  const { recruiterId } = useParams<{ recruiterId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>('0');
 
-  // Проверяем, открыт ли режим редактирования через URL
-  const isEditMode = location.pathname.endsWith('/edit');
   const { data: recruiterData, isLoading: recruiterLoading } = useRecruiterControllerFindById(
     recruiterId ?? ''
   );
@@ -56,12 +51,6 @@ const RecruiterDetailPage = () => {
 
   const recruiterVacancies: AssignedVacancyRecruiterDto[] | undefined =
     recruiterVacanciesData?.data;
-
-  const selectedAssignment = useMemo(
-    () => recruiterVacancies?.find((assignment) => assignment.id === assignmentId) ?? null,
-    [assignmentId, recruiterVacancies]
-  );
-  const drawerOpened = Boolean(assignmentId);
 
   const allCompanies = companiesData?.data;
 
@@ -132,9 +121,7 @@ const RecruiterDetailPage = () => {
   if (isLoading) {
     return (
       <Container size="md" py="xl">
-        <Center h={200}>
-          <Loader size="lg" />
-        </Center>
+        <CenteredLoader />
       </Container>
     );
   }
@@ -180,6 +167,12 @@ const RecruiterDetailPage = () => {
   const mobileBottomPadding = isMobile
     ? `calc(${theme.spacing.xl}px + 56px + env(safe-area-inset-bottom, 0px))`
     : undefined;
+
+  const outletContext: RecruiterDetailOutletContext = {
+    recruiterId: recruiter?.id ?? '',
+    recruiter,
+    recruiterVacancies,
+  };
 
   return (
     <>
@@ -341,21 +334,7 @@ const RecruiterDetailPage = () => {
 
         {isMobile && <MobileBackBar to={ROUTES.recruiters.root} label="Назад" fixed />}
       </Box>
-
-      <AssignmentDrawer
-        assignmentId={assignmentId ?? null}
-        assignment={selectedAssignment}
-        opened={drawerOpened}
-        onCloseAssignmentDrawer={() => {
-          navigate(ROUTES.recruiters.detail(recruiter.id));
-        }}
-      />
-
-      <EditRecruiterDrawer
-        recruiterId={recruiter.id}
-        opened={isEditMode}
-        onClose={() => navigate(ROUTES.recruiters.detail(recruiter.id))}
-      />
+      <Outlet context={outletContext} />
     </>
   );
 };

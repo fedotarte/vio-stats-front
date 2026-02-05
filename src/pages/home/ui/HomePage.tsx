@@ -2,13 +2,7 @@ import { useCallback } from 'react';
 import { IconPlus } from '@tabler/icons-react';
 import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import { ActionIcon, Affix, Container, Tabs, Transition } from '@mantine/core';
-import { CreateClientDrawer } from '../../../features/create-client/ui/CreateClientDrawer.tsx';
-import { CreateRecruiterDrawer } from '../../../features/create-recruiter';
-import { CreateVacancyDrawer } from '../../../features/create-vacancy';
 import { ROUTES } from '../../../shared/config/routes';
-import { ClientsPage } from '../../clients';
-import { RecruitersPage } from '../../recruiters';
-import { VacanciesPage } from '../../vacancies';
 
 const TAB_PATHS = {
   recruiters: ROUTES.recruiters.root,
@@ -41,14 +35,6 @@ const HomePage = () => {
         ? 'clients'
         : 'recruiters';
 
-  const recruiterDrawerOpened = Boolean(useMatch(ROUTES.recruiters.create));
-  const vacancyDrawerOpened = Boolean(useMatch(ROUTES.vacancies.create));
-  const clientDrawerOpened = Boolean(useMatch(ROUTES.clients.create));
-
-  const closeDrawer = useCallback(() => {
-    navigate(TAB_PATHS[activeTab]);
-  }, [navigate, activeTab]);
-
   const handleTabChange = useCallback(
     (tab: string | null) => {
       if (isTabInRoutes(tab)) {
@@ -70,19 +56,9 @@ const HomePage = () => {
           <Tabs.Tab value="vacancies">Вакансии</Tabs.Tab>
           <Tabs.Tab value="clients">Клиенты</Tabs.Tab>
         </Tabs.List>
-
-        <Tabs.Panel value="recruiters">
-          <RecruitersPage />
-        </Tabs.Panel>
-
-        <Tabs.Panel value="vacancies">
-          <VacanciesPage />
-        </Tabs.Panel>
-
-        <Tabs.Panel value="clients">
-          <ClientsPage />
-        </Tabs.Panel>
       </Tabs>
+
+      <Outlet />
 
       <Affix position={{ bottom: 20, right: 20 }}>
         <Transition transition="slide-up" mounted>
@@ -100,12 +76,6 @@ const HomePage = () => {
           )}
         </Transition>
       </Affix>
-
-      <CreateRecruiterDrawer opened={recruiterDrawerOpened} onClose={closeDrawer} />
-      <CreateVacancyDrawer opened={vacancyDrawerOpened} onClose={closeDrawer} />
-      <CreateClientDrawer opened={clientDrawerOpened} onClose={closeDrawer} />
-
-      <Outlet />
     </Container>
   );
 };
