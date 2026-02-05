@@ -90,7 +90,14 @@ export const VacancyDrawer = ({
   const navigate = useNavigate();
 
   const { data: recruitersData, isFetching: isRecruiterFetching } = useRecruiterControllerFindAll();
-  const recruiters = useMemo(() => recruitersData?.data, [recruitersData?.data]);
+  const recruiters = useMemo(() => {
+    const payload = recruitersData?.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray((payload as { data?: RecruiterEntity[] }).data)) {
+      return (payload as { data: RecruiterEntity[] }).data;
+    }
+    return [];
+  }, [recruitersData?.data]);
 
   const { data: assignmentsData, isFetching: isAssignmentsFetching } =
     useAssignmentControllerFindAll(

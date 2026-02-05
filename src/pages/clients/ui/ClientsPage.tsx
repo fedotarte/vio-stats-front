@@ -4,6 +4,7 @@ import { Center, Loader, Space, Text, Title } from '@mantine/core';
 import { SearchCompany } from '../../../features/search-company/ui/SearchCompany.tsx';
 import { useCompanyControllerFindAll } from '../../../shared/api/generated/endpoints';
 import { ROUTES } from '../../../shared/config/routes';
+import type { CompanyEntity } from '../../../shared/types';
 import { CompaniesList } from '../../../widgets/companies-list';
 
 export const ClientsPage = () => {
@@ -12,7 +13,14 @@ export const ClientsPage = () => {
 
   const { data, isLoading, error } = useCompanyControllerFindAll();
 
-  const companies = useMemo(() => data?.data ?? [], [data?.data]);
+  const companies = useMemo(() => {
+    const payload = data?.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray((payload as { data?: CompanyEntity[] }).data)) {
+      return (payload as { data: CompanyEntity[] }).data;
+    }
+    return [];
+  }, [data?.data]);
 
   const filteredCompanies = useMemo(() => {
     const query = searchQuery.toLowerCase();

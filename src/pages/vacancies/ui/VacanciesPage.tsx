@@ -14,7 +14,14 @@ export const VacanciesPage = () => {
 
   const { data: vacanciesResponse, isLoading, error } = useVacancyControllerFindAll();
 
-  const vacancies = useMemo(() => vacanciesResponse?.data ?? [], [vacanciesResponse?.data]);
+  const vacancies = useMemo(() => {
+    const payload = vacanciesResponse?.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray((payload as { data?: VacancyEntity[] }).data)) {
+      return (payload as { data: VacancyEntity[] }).data;
+    }
+    return [];
+  }, [vacanciesResponse?.data]);
 
   const location = useLocation();
 

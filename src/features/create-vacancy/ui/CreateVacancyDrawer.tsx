@@ -28,7 +28,7 @@ import {
   useRecruiterControllerFindAll,
   useVacancyControllerCreate,
 } from '../../../shared/api/generated/endpoints';
-import type { CreateVacancyDto, RecruiterEntity } from '../../../shared/types';
+import type { CompanyEntity, CreateVacancyDto, RecruiterEntity } from '../../../shared/types';
 
 interface CreateVacancyDrawerProps {
   opened: boolean;
@@ -55,8 +55,23 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
   const { data: companiesData, isFetching: isCompanyFetching } = useCompanyControllerFindAll();
   const { data: recruitersData, isFetching: isRecruiterFetching } = useRecruiterControllerFindAll();
 
-  const companies = useMemo(() => companiesData?.data ?? [], [companiesData?.data]);
-  const recruiters = useMemo(() => recruitersData?.data, [recruitersData?.data]);
+  const companies = useMemo(() => {
+    const payload = companiesData?.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray((payload as { data?: CompanyEntity[] }).data)) {
+      return (payload as { data: CompanyEntity[] }).data;
+    }
+    return [];
+  }, [companiesData?.data]);
+
+  const recruiters = useMemo(() => {
+    const payload = recruitersData?.data;
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray((payload as { data?: RecruiterEntity[] }).data)) {
+      return (payload as { data: RecruiterEntity[] }).data;
+    }
+    return [];
+  }, [recruitersData?.data]);
 
   const { mutateAsync: assignRecruiter, isPending: isVacancyAssigning } =
     useAssignmentControllerCreate({
