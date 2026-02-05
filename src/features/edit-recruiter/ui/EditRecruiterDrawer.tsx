@@ -2,18 +2,8 @@ import { useEffect } from 'react';
 import { IconTrash } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Drawer,
-  Group,
-  Loader,
-  Stack,
-  Text,
-  TextInput,
-  useMantineTheme,
-} from '@mantine/core';
+import { Button, Group, Loader, Stack, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import {
@@ -25,6 +15,7 @@ import {
 } from '../../../shared/api/generated/endpoints';
 import { ROUTES } from '../../../shared/config/routes';
 import type { UpdateRecruiterDto } from '../../../shared/types';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface EditRecruiterDrawerProps {
   recruiterId: string | null;
@@ -40,8 +31,6 @@ interface RecruiterFormValues {
 }
 
 export const EditRecruiterDrawer = ({ recruiterId, opened, onClose }: EditRecruiterDrawerProps) => {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -168,38 +157,13 @@ export const EditRecruiterDrawer = ({ recruiterId, opened, onClose }: EditRecrui
   const isPending = isUpdating || isDeleting;
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={handleCancel}
       title="Редактирование рекрутера"
-      padding="md"
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? '100%' : 'md'}
-      transitionProps={{
-        transition: isMobile ? 'slide-up' : 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      styles={
-        isMobile
-          ? {
-              inner: {
-                height: 'auto',
-              },
-              content: {
-                height: 'fit-content',
-                maxHeight: '90vh',
-              },
-            }
-          : undefined
-      }
+      mobileSize="100%"
+      desktopSize="md"
+      desktopPadding="md"
     >
       {isLoading ? (
         <Loader color="violet" />
@@ -256,6 +220,6 @@ export const EditRecruiterDrawer = ({ recruiterId, opened, onClose }: EditRecrui
           </Stack>
         </form>
       )}
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

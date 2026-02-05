@@ -4,9 +4,7 @@ import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
-  Center,
   Container,
-  Loader,
   Stack,
   Text,
   TextInput,
@@ -24,6 +22,7 @@ import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { ROUTES } from '../../../shared/config/routes';
 import type { UpdateCompanyDto } from '../../../shared/api/generated/models';
+import { CenteredLoader } from '../../../shared/ui/CenteredState';
 import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
 
 const CompanyEditPage = () => {
@@ -123,9 +122,7 @@ const CompanyEditPage = () => {
   if (isLoading) {
     return (
       <Container size="md" py="xl">
-        <Center h={200}>
-          <Loader size="lg" />
-        </Center>
+        <CenteredLoader />
       </Container>
     );
   }

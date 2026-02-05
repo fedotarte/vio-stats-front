@@ -1,13 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Button, Drawer, Group, Stack, TextInput, useMantineTheme } from '@mantine/core';
+import { Button, Group, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
   getRecruiterControllerFindAllQueryKey,
   useRecruiterControllerCreate,
 } from '../../../shared/api/generated/endpoints';
 import type { CreateRecruiterDto } from '../../../shared/types';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface CreateRecruiterDrawerProps {
   opened: boolean;
@@ -22,8 +22,6 @@ interface RecruiterFormValues {
 }
 
 export const CreateRecruiterDrawer = ({ opened, onClose }: CreateRecruiterDrawerProps) => {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const queryClient = useQueryClient();
 
   const { mutate: createRecruiter, isPending } = useRecruiterControllerCreate({
@@ -79,38 +77,13 @@ export const CreateRecruiterDrawer = ({ opened, onClose }: CreateRecruiterDrawer
   };
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={handleCancel}
       title="Создание рекрутера"
-      padding="md"
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? '100%' : 'md'}
-      transitionProps={{
-        transition: isMobile ? 'slide-up' : 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      styles={
-        isMobile
-          ? {
-              inner: {
-                height: 'auto',
-              },
-              content: {
-                height: 'fit-content',
-                maxHeight: '90vh',
-              },
-            }
-          : undefined
-      }
+      mobileSize="100%"
+      desktopSize="md"
+      desktopPadding="md"
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
@@ -152,6 +125,6 @@ export const CreateRecruiterDrawer = ({ opened, onClose }: CreateRecruiterDrawer
           </Group>
         </Stack>
       </form>
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

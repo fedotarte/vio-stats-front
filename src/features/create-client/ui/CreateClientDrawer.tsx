@@ -1,15 +1,15 @@
 import { IconAt } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { IMaskInput } from 'react-imask';
-import { Button, Drawer, Group, Input, Stack, TextInput, useMantineTheme } from '@mantine/core';
+import { Button, Group, Input, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
   getCompanyControllerFindAllQueryKey,
   useCompanyControllerCreate,
 } from '../../../shared/api/generated/endpoints';
 import type { CreateCompanyDto } from '../../../shared/types';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface CreateClientDrawerProps {
   opened: boolean;
@@ -25,8 +25,6 @@ interface ClientFormValues {
 
 export const CreateClientDrawer = ({ opened, onClose }: CreateClientDrawerProps) => {
   const icon = <IconAt size={16} />;
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const queryClient = useQueryClient();
 
   const { mutate: createClient, isPending } = useCompanyControllerCreate({
@@ -79,25 +77,14 @@ export const CreateClientDrawer = ({ opened, onClose }: CreateClientDrawerProps)
   };
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={handleCancel}
       title="Создание клиента"
-      padding="md"
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? 'auto' : 'md'}
-      transitionProps={{
-        transition: isMobile ? 'slide-up' : 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
+      mobileSize="auto"
+      desktopSize="md"
+      mobilePadding="md"
+      desktopPadding="md"
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
@@ -141,6 +128,6 @@ export const CreateClientDrawer = ({ opened, onClose }: CreateClientDrawerProps)
           </Group>
         </Stack>
       </form>
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

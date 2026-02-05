@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { HttpStatusCode, type AxiosError } from 'axios';
-import { Button, Modal, PasswordInput, Stack, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { Center, Loader } from '@mantine/core';
 import { AXIOS_INSTANCE } from '../api/axios-instance';
 import { AuthContext } from './AuthContext';
+import { AuthScreen } from './ui/AuthScreen';
 
 const AUTH_STORAGE_KEY = 'vio_stats_auth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,7 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       AXIOS_INSTANCE.defaults.headers.common['Authorization'] = `Basic ${savedAuth}`;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
+    setIsReady(true);
   }, []);
 
   // Setup 401 interceptor
@@ -51,7 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.removeItem(AUTH_STORAGE_KEY);
           delete AXIOS_INSTANCE.defaults.headers.common['Authorization'];
           setIsAuthenticated(false);
-          setIsModalOpen(true);
         }
         return Promise.reject(error);
       }
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openAuthModal = useCallback(() => {
-    setIsModalOpen(true);
+    setIsAuthenticated(false);
   }, []);
 
   const logout = useCallback(() => {
@@ -85,7 +85,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(AUTH_STORAGE_KEY, credentials);
 
     setIsAuthenticated(true);
-    setIsModalOpen(false);
     setError(null);
     setUsername('');
     setPassword('');
@@ -103,51 +102,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [handleSubmit]
   );
 
+  if (!isReady) {
+    return (
+      <Center h="100vh">
+        <Loader size="lg" />
+      </Center>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{ isAuthenticated, openAuthModal, logout }}>
-      {children}
-      <Modal
-        opened={isModalOpen}
-        onClose={() => {}}
-        title="Притормози!"
-        withCloseButton={false}
-        closeOnClickOutside={false}
-        closeOnEscape={false}
-        centered
-      >
-        <Stack>
-          <Text size="sm" c="dimmed">
-            Введи логин и пароль
-          </Text>
-
-          <TextInput
-            label="Логин"
-            placeholder="Введите логин"
-            value={username}
-            onChange={(e) => setUsername(e.currentTarget.value)}
-            onKeyDown={handleKeyDown}
-            autoFocus={!isMobile}
-          />
-
-          <PasswordInput
-            label="Пароль"
-            placeholder="Введите пароль"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            onKeyDown={handleKeyDown}
-          />
-
-          {error && (
-            <Text size="sm" c="red">
-              {error}
-            </Text>
-          )}
-
-          <Button onClick={handleSubmit} fullWidth mt="md">
-            Войти
-          </Button>
-        </Stack>
-      </Modal>
+      {isAuthenticated ? (
+        children
+      ) : (
+        <AuthScreen
+          username={username}
+          password={password}
+          error={error}
+          onUsernameChange={setUsername}
+          onPasswordChange={setPassword}
+          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
+        />
+      )}
     </AuthContext.Provider>
   );
 }

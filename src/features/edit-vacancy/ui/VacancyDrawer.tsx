@@ -9,7 +9,6 @@ import {
   Avatar,
   Badge,
   Button,
-  Drawer,
   Group,
   Loader,
   MultiSelect,
@@ -38,6 +37,7 @@ import {
 } from '../../../shared/api/generated/endpoints';
 import { ROUTES } from '../../../shared/config/routes';
 import type { RecruiterEntity, UpdateVacancyDto, VacancyEntity } from '../../../shared/types';
+import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
 
 interface VacancyDrawerProps {
   vacancy: VacancyEntity | null;
@@ -296,41 +296,18 @@ export const VacancyDrawer = ({
   const isPending = isVacancyUpdating || isAssigning || isAssignmentRemoving || isVacancyRemoving;
 
   return (
-    <Drawer
+    <ResponsiveDrawer
       opened={opened}
       onClose={() => {
         setIsEditing(false);
         onCloseVacancyDrawer();
       }}
       title={isEditing ? 'Редактирование вакансии' : 'Просмотр вакансии'}
-      padding={isMobile ? 'lg' : 'md'}
-      position={isMobile ? 'bottom' : 'right'}
-      size={isMobile ? '70%' : 'md'}
-      transitionProps={{
-        transition: 'slide-left',
-        duration: 200,
-        timingFunction: 'ease',
-      }}
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      closeButtonProps={{
-        size: 'lg',
-      }}
-      styles={
-        isMobile
-          ? {
-              inner: {
-                height: 'auto',
-              },
-              content: {
-                height: 'fit-content',
-                maxHeight: '90vh',
-              },
-            }
-          : undefined
-      }
+      mobileSize="70%"
+      desktopSize="md"
+      mobilePadding="lg"
+      desktopPadding="md"
+      transitionProps={{ transition: 'slide-left', duration: 200, timingFunction: 'ease' }}
     >
       {!vacancy ? null : isFetching ? (
         <Loader color="violet" />
@@ -462,6 +439,6 @@ export const VacancyDrawer = ({
           </Stack>
         </form>
       )}
-    </Drawer>
+    </ResponsiveDrawer>
   );
 };

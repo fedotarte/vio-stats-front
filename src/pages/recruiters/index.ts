@@ -1,1 +1,1 @@
-export { RecruitersPage } from './ui/RecruitersPage';
+export { default as RecruitersPage } from './ui/RecruitersPage';
