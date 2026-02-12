@@ -181,7 +181,17 @@
       },
       "get": {
         "operationId": "RecruiterController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Поиск по имени, фамилии или email",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Список рекрутеров",

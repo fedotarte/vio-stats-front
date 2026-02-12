@@ -115,7 +115,6 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
     validate: {
       title: (value) => (!value ? 'Название обязательно' : null),
       companyId: (value) => (!value ? 'Компания обязательна' : null),
-      deadline: (value) => (!value ? 'Забыла дэдлайн :)' : null),
     },
   });
 
@@ -128,11 +127,16 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
     [companies]
   );
 
+  const normalizeDeadline = (value: VacancyFormValues['deadline']) => {
+    if (!value) return undefined;
+    return value instanceof Date ? value.toISOString() : String(value);
+  };
+
   const handleSubmit = async (values: VacancyFormValues) => {
     const dto: CreateVacancyDto = {
       title: values.title,
       description: values.description || undefined,
-      deadline: values.deadline ? String(values.deadline) : undefined,
+      deadline: normalizeDeadline(values.deadline),
       companyId: values.companyId,
     };
     const createdVacancyResponse = await createVacancy({ data: dto });
@@ -225,15 +229,17 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
             <MultiSelect
               label="Назначить рекрутеров"
               placeholder="Введи или выбери"
-              data={recruiters?.map((recruiter) => ({
-                label: prepareRecruitersFullName(recruiter),
-                value: recruiter?.id,
-              }))}
-              limit={5}
+              data={
+                recruiters?.map((recruiter) => ({
+                  label: prepareRecruitersFullName(recruiter),
+                  value: recruiter?.id,
+                })) ?? []
+              }
               nothingFoundMessage="Не нашли..."
               renderOption={renderRecruiterOption}
               searchable
               hidePickedOptions
+              maxDropdownHeight={260}
               comboboxProps={
                 isMobile ? { withinPortal: false, position: 'top', zIndex: 301 } : undefined
               }
@@ -241,8 +247,9 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
             />
 
             <NumberInput
-              label="Базовое количество CV"
-              placeholder="от 0 до ∞"
+              label="Запрошенное количество резюме"
+              description="Если нужно 6+, укажите минимальное число."
+              placeholder="например 2 или 6"
               min={0}
               {...form.getInputProps('requiredResumes')}
             />

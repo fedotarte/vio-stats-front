@@ -61,12 +61,22 @@ export const CreateClientDrawer = ({ opened, onClose }: CreateClientDrawerProps)
     },
   });
 
+  const normalizeOptional = (value?: string) => {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed : undefined;
+  };
+
+  const normalizePhone = (value?: string) => {
+    const digits = value?.replace(/\D/g, '') ?? '';
+    return digits.length >= 11 ? value : undefined;
+  };
+
   const handleSubmit = (values: ClientFormValues) => {
     const dto: CreateCompanyDto = {
       name: values.name,
-      address: values.address,
-      email: values.email,
-      phone: values.phone,
+      address: normalizeOptional(values.address),
+      email: normalizeOptional(values.email),
+      phone: normalizePhone(values.phone),
     };
     createClient({ data: dto });
   };
@@ -109,12 +119,14 @@ export const CreateClientDrawer = ({ opened, onClose }: CreateClientDrawerProps)
             {...form.getInputProps('email')}
           />
 
-          <Input.Wrapper label="Телефон компании">
+          <Input.Wrapper label="Телефон компании" error={form.getInputProps('phone').error}>
             <Input
               component={IMaskInput}
               mask="+7 (000) 000-00-00"
               placeholder="+7 (999) 123-45-67"
-              {...form.getInputProps('phone')}
+              value={form.values.phone}
+              onAccept={(value) => form.setFieldValue('phone', value)}
+              onBlur={form.getInputProps('phone').onBlur}
             />
           </Input.Wrapper>
 

@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0
  */
 
-export type VacancyControllerFindAllParams = {
+export type RecruiterControllerFindAllParams = {
   /**
-   * Фильтр по ID компании
+   * Поиск по имени, фамилии или email
    */
-  companyId?: string;
+  search?: string;
 };

@@ -336,11 +336,10 @@ export const VacancyDrawer = ({
                   {...form.getInputProps('deadline')}
                 />
                 <NumberInput
-                  label="Сколько резюме отправить"
-                  placeholder="от 0 до 100"
-                  clampBehavior="strict"
+                  label="Запрошенное количество резюме"
+                  description="Если нужно 6+, укажите минимальное число."
+                  placeholder="например 2 или 6"
                   min={0}
-                  max={100}
                   decimalScale={0}
                   defaultValue={0}
                   {...form.getInputProps('requiredResumes')}
@@ -348,14 +347,16 @@ export const VacancyDrawer = ({
                 <MultiSelect
                   label="Назначенные рекрутеры"
                   placeholder="Введи или выбери"
-                  data={recruiters?.map((recruiter) => ({
-                    label: prepareRecruitersFullName(recruiter),
-                    value: recruiter.id,
-                  }))}
-                  limit={5}
+                  data={
+                    recruiters?.map((recruiter) => ({
+                      label: prepareRecruitersFullName(recruiter),
+                      value: recruiter.id,
+                    })) ?? []
+                  }
                   searchable
                   nothingFoundMessage="Не нашли..."
                   renderOption={renderRecruiterOption}
+                  maxDropdownHeight={260}
                   comboboxProps={
                     isMobile ? { withinPortal: false, position: 'top', zIndex: 301 } : undefined
                   }

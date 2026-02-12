@@ -102,9 +102,27 @@ const CompanyEditPage = () => {
     }
   }, [company]);
 
+  const normalizeOptional = (value?: string) => {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed : undefined;
+  };
+
+  const normalizePhone = (value?: string) => {
+    const digits = value?.replace(/\D/g, '') ?? '';
+    return digits.length >= 11 ? value : undefined;
+  };
+
   const handleSubmit = (values: UpdateCompanyDto) => {
     if (!companyId) return;
-    updateCompany({ id: companyId, data: values });
+    updateCompany({
+      id: companyId,
+      data: {
+        name: values.name,
+        email: normalizeOptional(values.email),
+        address: normalizeOptional(values.address),
+        phone: normalizePhone(values.phone),
+      },
+    });
   };
 
   const openDeleteModal = () =>
