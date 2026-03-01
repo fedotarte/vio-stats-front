@@ -1,14 +1,14 @@
 import { Select, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import type { CompanyEntity } from '../../../shared/types';
+import type { CompanyResponseDto } from '@/shared/api';
 
 interface CompanySelectProps {
-  companies: CompanyEntity[];
   value: string | null;
   onChange: (value: string | null) => void;
+  companies?: CompanyResponseDto[] | undefined;
 }
 
-export const CompanySelect = ({ companies, value, onChange }: CompanySelectProps) => {
+export const CompanySelect = ({ companies = [], value, onChange }: CompanySelectProps) => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const data = [

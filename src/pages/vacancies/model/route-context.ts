@@ -1,8 +1,8 @@
 import { useOutletContext } from 'react-router-dom';
-import type { VacancyEntity } from '../../../shared/types';
+import type { VacancyResponseDto } from '@/shared/api';
 
 export type VacanciesOutletContext = {
-  vacancies: VacancyEntity[];
+  vacancies: VacancyResponseDto[];
 };
 
 export const useVacanciesOutletContext = () => useOutletContext<VacanciesOutletContext>();

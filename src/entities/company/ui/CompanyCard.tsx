@@ -1,8 +1,8 @@
 import { Card, Group, Text } from '@mantine/core';
-import { type CompanyEntity } from '../../../shared/types';
+import type { CompanyResponseDto } from '@/shared/api';
 
 interface CompanyCardProps {
-  company: CompanyEntity;
+  company: CompanyResponseDto;
   onClick: () => void;
 }
 

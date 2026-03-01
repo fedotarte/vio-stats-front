@@ -21,7 +21,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyEntity"
+                  "$ref": "#/components/schemas/CompanyResponseDto"
                 }
               }
             }
@@ -41,7 +41,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/CompanyEntity"
+                    "$ref": "#/components/schemas/CompanyResponseDto"
                   }
                 }
               }
@@ -72,7 +72,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyEntity"
+                  "$ref": "#/components/schemas/CompanyWithVacanciesResponseDto"
                 }
               }
             }
@@ -113,7 +113,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyEntity"
+                  "$ref": "#/components/schemas/CompanyResponseDto"
                 }
               }
             }
@@ -170,7 +170,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecruiterEntity"
+                  "$ref": "#/components/schemas/RecruiterResponseDto"
                 }
               }
             }
@@ -200,7 +200,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RecruiterEntity"
+                    "$ref": "#/components/schemas/RecruiterResponseDto"
                   }
                 }
               }
@@ -231,7 +231,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecruiterEntity"
+                  "$ref": "#/components/schemas/RecruiterWithAssignmentsResponseDto"
                 }
               }
             }
@@ -272,7 +272,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecruiterEntity"
+                  "$ref": "#/components/schemas/RecruiterResponseDto"
                 }
               }
             }
@@ -329,7 +329,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VacancyEntity"
+                  "$ref": "#/components/schemas/VacancyResponseDto"
                 }
               }
             }
@@ -359,7 +359,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/VacancyEntity"
+                    "$ref": "#/components/schemas/VacancyResponseDto"
                   }
                 }
               }
@@ -390,7 +390,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VacancyEntity"
+                  "$ref": "#/components/schemas/VacancyWithAssignmentsResponseDto"
                 }
               }
             }
@@ -431,7 +431,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VacancyEntity"
+                  "$ref": "#/components/schemas/VacancyResponseDto"
                 }
               }
             }
@@ -743,7 +743,7 @@
         },
         "required": ["name"]
       },
-      "CompanyEntity": {
+      "CompanyResponseDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -778,6 +778,86 @@
           }
         },
         "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "CompanyVacancyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор вакансии"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название вакансии"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание вакансии"
+          },
+          "deadline": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дедлайн по вакансии"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "ID компании-клиента"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "title", "companyId", "createdAt", "updatedAt"]
+      },
+      "CompanyWithVacanciesResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор компании"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название компании"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email компании"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес компании"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          },
+          "vacancies": {
+            "description": "Список вакансий компании",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyVacancyResponseDto"
+            }
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt", "vacancies"]
       },
       "UpdateCompanyDto": {
         "type": "object",
@@ -830,7 +910,7 @@
         },
         "required": ["firstName", "lastName", "email"]
       },
-      "RecruiterEntity": {
+      "RecruiterResponseDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -865,6 +945,111 @@
           }
         },
         "required": ["id", "firstName", "lastName", "email", "createdAt", "updatedAt"]
+      },
+      "RecruiterAssignmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор назначения"
+          },
+          "recruiterId": {
+            "type": "string",
+            "description": "ID рекрутера"
+          },
+          "vacancyId": {
+            "type": "string",
+            "description": "ID вакансии"
+          },
+          "requiredResumes": {
+            "type": "number",
+            "description": "Количество необходимых резюме"
+          },
+          "sentResumes": {
+            "type": "number",
+            "description": "Количество отправленных резюме"
+          },
+          "acceptedResumes": {
+            "type": "number",
+            "description": "Количество принятых резюме"
+          },
+          "rejectedResumes": {
+            "type": "number",
+            "description": "Количество отклоненных резюме"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": [
+          "id",
+          "recruiterId",
+          "vacancyId",
+          "requiredResumes",
+          "sentResumes",
+          "acceptedResumes",
+          "rejectedResumes",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "RecruiterWithAssignmentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор рекрутера"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email рекрутера"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон рекрутера"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          },
+          "recruiterVacancies": {
+            "description": "Назначения рекрутера на вакансии",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecruiterAssignmentResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "createdAt",
+          "updatedAt",
+          "recruiterVacancies"
+        ]
       },
       "UpdateRecruiterDto": {
         "type": "object",
@@ -917,7 +1102,43 @@
         },
         "required": ["title", "companyId"]
       },
-      "VacancyEntity": {
+      "CompanyInVacancyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор компании"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название компании"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email компании"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон компании"
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес компании"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "VacancyResponseDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -941,6 +1162,14 @@
             "type": "string",
             "description": "ID компании-клиента"
           },
+          "company": {
+            "description": "Данные компании, к которой относится вакансия",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyInVacancyResponseDto"
+              }
+            ]
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -952,7 +1181,166 @@
             "description": "Дата обновления"
           }
         },
-        "required": ["id", "title", "companyId", "createdAt", "updatedAt"]
+        "required": ["id", "title", "companyId", "company", "createdAt", "updatedAt"]
+      },
+      "VacancyRecruiterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор рекрутера"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "Имя рекрутера"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия рекрутера"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email рекрутера"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Телефон рекрутера"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          }
+        },
+        "required": ["id", "firstName", "lastName", "email", "createdAt", "updatedAt"]
+      },
+      "VacancyAssignmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор назначения"
+          },
+          "recruiterId": {
+            "type": "string",
+            "description": "ID рекрутера"
+          },
+          "vacancyId": {
+            "type": "string",
+            "description": "ID вакансии"
+          },
+          "requiredResumes": {
+            "type": "number",
+            "description": "Количество необходимых резюме"
+          },
+          "sentResumes": {
+            "type": "number",
+            "description": "Количество отправленных резюме"
+          },
+          "acceptedResumes": {
+            "type": "number",
+            "description": "Количество принятых резюме"
+          },
+          "rejectedResumes": {
+            "type": "number",
+            "description": "Количество отклоненных резюме"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          },
+          "recruiter": {
+            "description": "Данные рекрутера, назначенного на вакансию",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VacancyRecruiterResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "recruiterId",
+          "vacancyId",
+          "requiredResumes",
+          "sentResumes",
+          "acceptedResumes",
+          "rejectedResumes",
+          "createdAt",
+          "updatedAt",
+          "recruiter"
+        ]
+      },
+      "VacancyWithAssignmentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Уникальный идентификатор вакансии"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название вакансии"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание вакансии"
+          },
+          "deadline": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дедлайн по вакансии"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "ID компании-клиента"
+          },
+          "company": {
+            "description": "Данные компании, к которой относится вакансия",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompanyInVacancyResponseDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления"
+          },
+          "recruiterVacancies": {
+            "description": "Список назначений рекрутеров на вакансию",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyAssignmentResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "companyId",
+          "company",
+          "createdAt",
+          "updatedAt",
+          "recruiterVacancies"
+        ]
       },
       "UpdateVacancyDto": {
         "type": "object",

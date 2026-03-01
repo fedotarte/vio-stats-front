@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { IconCheck } from '@tabler/icons-react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Avatar,
   Button,
@@ -21,14 +21,16 @@ import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
+  getAssignmentControllerFindAllQueryKey,
   getVacancyControllerFindAllQueryKey,
   useAssignmentControllerCreate,
   useCompanyControllerFindAll,
   useRecruiterControllerFindAll,
   useVacancyControllerCreate,
-} from '../../../shared/api/generated/endpoints';
-import type { CreateVacancyDto, RecruiterEntity } from '../../../shared/types';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type CreateVacancyDto,
+  type RecruiterResponseDto,
+} from '@/shared/api';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface CreateVacancyDrawerProps {
   opened: boolean;
@@ -44,7 +46,7 @@ interface VacancyFormValues {
   requiredResumes: number;
 }
 
-const prepareRecruitersFullName = (recruiter: RecruiterEntity) =>
+const prepareRecruitersFullName = (recruiter: RecruiterResponseDto) =>
   `${recruiter.firstName} ${recruiter.lastName}`;
 
 export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProps) => {
@@ -55,8 +57,8 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
   const { data: companiesData, isFetching: isCompanyFetching } = useCompanyControllerFindAll();
   const { data: recruitersData, isFetching: isRecruiterFetching } = useRecruiterControllerFindAll();
 
-  const companies = useMemo(() => companiesData?.data ?? [], [companiesData?.data]);
-  const recruiters = useMemo(() => recruitersData?.data, [recruitersData?.data]);
+  const companies = Array.isArray(companiesData?.data) ? companiesData.data : [];
+  const recruiters = Array.isArray(recruitersData?.data) ? recruitersData.data : [];
 
   const { mutateAsync: assignRecruiter, isPending: isVacancyAssigning } =
     useAssignmentControllerCreate({
@@ -70,6 +72,7 @@ export const CreateVacancyDrawer = ({ opened, onClose }: CreateVacancyDrawerProp
             color: 'green',
           });
           queryClient.invalidateQueries({ queryKey: getVacancyControllerFindAllQueryKey() });
+          queryClient.invalidateQueries({ queryKey: getAssignmentControllerFindAllQueryKey() });
           form.reset();
           onClose();
         },

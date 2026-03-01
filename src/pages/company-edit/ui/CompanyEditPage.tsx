@@ -1,29 +1,23 @@
 import { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Container,
-  Stack,
-  Text,
-  TextInput,
-  useMantineTheme,
-} from '@mantine/core';
+import { Button, Container, Stack, Text, TextInput, useMantineTheme } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useMediaQuery } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import {
   getCompanyControllerFindAllQueryKey,
+  getCompanyControllerFindByIdQueryKey,
+  getVacancyControllerFindAllQueryKey,
   useCompanyControllerDelete,
   useCompanyControllerFindById,
   useCompanyControllerUpdate,
-} from '../../../shared/api/generated/endpoints';
-import { useForm } from '@mantine/form';
-import { useMediaQuery } from '@mantine/hooks';
-import { ROUTES } from '../../../shared/config/routes';
-import type { UpdateCompanyDto } from '../../../shared/api/generated/models';
-import { CenteredLoader } from '../../../shared/ui/CenteredState';
-import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
+  type UpdateCompanyDto,
+} from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { CenteredLoader, MobileBackBar } from '@/shared/ui';
 
 const CompanyEditPage = () => {
   const { companyId } = useParams<{ companyId: string }>();
@@ -39,14 +33,19 @@ const CompanyEditPage = () => {
 
   const { mutate: updateCompany, isPending: isUpdating } = useCompanyControllerUpdate({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         notifications.show({
           title: 'Успешно',
           message: 'Компания обновлена',
           color: 'green',
         });
-        navigate(ROUTES.clients.root);
-        queryClient.invalidateQueries({ queryKey: getCompanyControllerFindAllQueryKey() });
+        await queryClient.invalidateQueries({ queryKey: getCompanyControllerFindAllQueryKey() });
+        if (companyId) {
+          await queryClient.invalidateQueries({
+            queryKey: getCompanyControllerFindByIdQueryKey(companyId),
+          });
+        }
+        await navigate(ROUTES.clients.root);
       },
       onError: () => {
         notifications.show({
@@ -67,6 +66,7 @@ const CompanyEditPage = () => {
           color: 'green',
         });
         queryClient.invalidateQueries({ queryKey: getCompanyControllerFindAllQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getVacancyControllerFindAllQueryKey() });
         navigate(ROUTES.clients.root);
       },
       onError: () => {
@@ -100,7 +100,7 @@ const CompanyEditPage = () => {
         address: company.address ?? '',
       });
     }
-  }, [company]);
+  }, [company, form]);
 
   const normalizeOptional = (value?: string) => {
     const trimmed = value?.trim();
@@ -129,7 +129,9 @@ const CompanyEditPage = () => {
     modals.openConfirmModal({
       title: 'Удалить компанию?',
       centered: true,
-      children: <Text size="sm">Вы точно хотите удалить компанию? Это действие нельзя отменить.</Text>,
+      children: (
+        <Text size="sm">Вы точно хотите удалить компанию? Это действие нельзя отменить.</Text>
+      ),
       labels: { confirm: 'Удалить компанию', cancel: 'Отмена' },
       confirmProps: { color: 'red' },
       onConfirm: () => companyId && deleteCompany({ id: companyId }),

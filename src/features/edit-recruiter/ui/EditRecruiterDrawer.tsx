@@ -7,15 +7,16 @@ import { useForm } from '@mantine/form';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import {
+  getAssignmentControllerFindAllQueryKey,
   getRecruiterControllerFindAllQueryKey,
   getRecruiterControllerFindByIdQueryKey,
   useRecruiterControllerDelete,
   useRecruiterControllerFindById,
   useRecruiterControllerUpdate,
-} from '../../../shared/api/generated/endpoints';
-import { ROUTES } from '../../../shared/config/routes';
-import type { UpdateRecruiterDto } from '../../../shared/types';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type UpdateRecruiterDto,
+} from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface EditRecruiterDrawerProps {
   recruiterId: string | null;
@@ -74,6 +75,12 @@ export const EditRecruiterDrawer = ({ recruiterId, opened, onClose }: EditRecrui
           color: 'green',
         });
         queryClient.invalidateQueries({ queryKey: getRecruiterControllerFindAllQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getAssignmentControllerFindAllQueryKey() });
+        if (recruiterId) {
+          queryClient.invalidateQueries({
+            queryKey: getRecruiterControllerFindByIdQueryKey(recruiterId),
+          });
+        }
         onClose();
         navigate(ROUTES.recruiters.root);
       },

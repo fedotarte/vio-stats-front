@@ -5,9 +5,9 @@ import { notifications } from '@mantine/notifications';
 import {
   getRecruiterControllerFindAllQueryKey,
   useRecruiterControllerCreate,
-} from '../../../shared/api/generated/endpoints';
-import type { CreateRecruiterDto } from '../../../shared/types';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type CreateRecruiterDto,
+} from '@/shared/api';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface CreateRecruiterDrawerProps {
   opened: boolean;

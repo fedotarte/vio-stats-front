@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
-import { ROUTES } from '../../shared/config/routes';
+import { ROUTES } from '@/shared/config';
 import {
   ClientsPage,
   CompanyDetailRedirect,
@@ -16,7 +16,7 @@ import {
   VacanciesPage,
   VacancyDrawerRoute,
   VacancyEditDrawerRoute,
-} from '.';
+} from './routes-lazy.ts';
 
 const homeRoute = (
   path: string,

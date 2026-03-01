@@ -1,27 +1,28 @@
 import { useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Space, Title } from '@mantine/core';
-import { SearchRecruiter } from '../../../features/search-recruiter';
-import { useRecruiterControllerFindAll } from '../../../shared/api/generated/endpoints';
-import { ROUTES } from '../../../shared/config/routes';
-import { CenteredError, CenteredLoader } from '../../../shared/ui/CenteredState';
-import { RecruitersList } from '../../../widgets/recruiters-list';
+import { SearchRecruiter } from '@/features/search-recruiter';
+import { useRecruiterControllerFindAll } from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { CenteredError, CenteredLoader } from '@/shared/ui';
+import { RecruitersList } from '@/widgets/recruiters-list';
 
 const RecruitersPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useRecruiterControllerFindAll();
+  const { data: recruitersResponse, isLoading, error } = useRecruiterControllerFindAll();
 
-  const recruiters = useMemo(() => data?.data ?? [], [data?.data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const recruiters = Array.isArray(recruitersResponse?.data) ? recruitersResponse.data : [];
 
   const filteredRecruiters = useMemo(() => {
     const query = searchQuery.toLowerCase();
     return recruiters.filter(
       (recruiter) =>
-        recruiter.firstName.toLowerCase().includes(query) ||
-        recruiter.lastName.toLowerCase().includes(query) ||
-        recruiter.email.toLowerCase().includes(query)
+        recruiter?.firstName?.toLowerCase()?.includes(query) ||
+        recruiter?.lastName?.toLowerCase()?.includes(query) ||
+        recruiter?.email?.toLowerCase()?.includes(query)
     );
   }, [searchQuery, recruiters]);
 

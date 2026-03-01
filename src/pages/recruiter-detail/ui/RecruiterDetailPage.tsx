@@ -19,18 +19,16 @@ import {
   type DefaultMantineColor,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { CompanySelect } from '../../../entities/company';
-import { RecruiterVacanciesList } from '../../../entities/vacancy';
+import { CompanySelect } from '@/entities/company';
+import { RecruiterVacanciesList } from '@/entities/vacancy';
 import {
   useAssignmentControllerFindAll,
   useCompanyControllerFindAll,
   useRecruiterControllerFindById,
-} from '../../../shared/api/generated/endpoints';
-import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
-import { ROUTES } from '../../../shared/config/routes';
-import type { VacancyEntity } from '../../../shared/types';
-import { CenteredLoader } from '../../../shared/ui/CenteredState';
-import { MobileBackBar } from '../../../shared/ui/MobileBackBar';
+  type AssignedVacancyRecruiterDto,
+} from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { CenteredLoader, MobileBackBar } from '@/shared/ui';
 import type { RecruiterDetailOutletContext } from '../model/route-context';
 
 const RecruiterDetailPage = () => {
@@ -59,8 +57,8 @@ const RecruiterDetailPage = () => {
     const ids = new Set(
       recruiterVacancies
         ?.map((rv) => {
-          const vacancy = rv.vacancy as unknown as VacancyEntity;
-          return vacancy?.companyId;
+          const vacancy = rv.vacancy;
+          return vacancy?.company?.id;
         })
         .filter(Boolean)
     );
@@ -107,8 +105,8 @@ const RecruiterDetailPage = () => {
   const filteredRecruiterVacancies = useMemo(() => {
     if (!selectedCompanyId) return [];
     return recruiterVacancies?.filter((rv) => {
-      const vacancy = rv.vacancy as unknown as VacancyEntity;
-      return vacancy && (selectedCompanyId === '0' || vacancy.companyId === selectedCompanyId);
+      const vacancy = rv.vacancy;
+      return vacancy && (selectedCompanyId === '0' || vacancy.company.id === selectedCompanyId);
     });
   }, [selectedCompanyId, recruiterVacancies]);
 

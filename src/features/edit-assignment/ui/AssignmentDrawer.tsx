@@ -2,16 +2,18 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Badge, Button, Group, Loader, NumberInput, Stack, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import {
   getAssignmentControllerFindAllQueryKey,
   getAssignmentControllerFindByIdQueryKey,
+  useAssignmentControllerDelete,
   useAssignmentControllerFindById,
   useAssignmentControllerUpdate,
-} from '../../../shared/api/generated/endpoints';
-import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
-import type { UpdateAssignmentDto } from '../../../shared/api/generated/models/updateAssignmentDto';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type AssignedVacancyRecruiterDto,
+  type UpdateAssignmentDto,
+} from '@/shared/api';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface AssignmentDrawerProps {
   assignmentId: string | null;
@@ -74,6 +76,32 @@ export const AssignmentDrawer = ({
     },
   });
 
+  const { mutate: deleteAssignment, isPending: isDeleting } = useAssignmentControllerDelete({
+    mutation: {
+      onSuccess: () => {
+        notifications.show({
+          title: 'Успешно',
+          message: 'Назначение удалено',
+          color: 'green',
+        });
+        queryClient.invalidateQueries({ queryKey: getAssignmentControllerFindAllQueryKey() });
+        if (assignmentId) {
+          queryClient.invalidateQueries({
+            queryKey: getAssignmentControllerFindByIdQueryKey(assignmentId),
+          });
+        }
+        onCloseAssignmentDrawer();
+      },
+      onError: () => {
+        notifications.show({
+          title: 'Ошибка',
+          message: 'Не удалось удалить назначение',
+          color: 'red',
+        });
+      },
+    },
+  });
+
   const form = useForm<AssignmentFormValues>({
     initialValues: {
       requiredResumes: 0,
@@ -96,7 +124,6 @@ export const AssignmentDrawer = ({
   }, [assignment]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsEditing(initialEditing);
   }, [initialEditing, opened]);
 
@@ -122,6 +149,22 @@ export const AssignmentDrawer = ({
     }
     setIsEditing(false);
   };
+
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: 'Удалить назначение?',
+      centered: true,
+      children: <Text size="sm">Вы точно хотите удалить назначение? Это действие необратимо.</Text>,
+      labels: { confirm: 'Удалить', cancel: 'Отмена' },
+      confirmProps: { color: 'red' },
+      onConfirm: () => {
+        if (assignment?.id) {
+          deleteAssignment({ id: assignment.id });
+        }
+      },
+    });
+
+  const isBusy = isPending || isDeleting;
 
   return (
     <ResponsiveDrawer
@@ -173,7 +216,7 @@ export const AssignmentDrawer = ({
                   {...form.getInputProps('rejectedResumes')}
                 />
                 <Group justify="flex-end" mt="md">
-                  <Button variant="outline" onClick={handleCancel} disabled={isPending}>
+                  <Button variant="outline" onClick={handleCancel} disabled={isBusy}>
                     Отмена
                   </Button>
                   <Button type="submit" loading={isPending}>
@@ -221,6 +264,16 @@ export const AssignmentDrawer = ({
 
                 <Button onClick={() => setIsEditing(true)} fullWidth>
                   Редактировать назначение
+                </Button>
+                <Button
+                  onClick={openDeleteModal}
+                  color="red"
+                  variant="outline"
+                  fullWidth
+                  loading={isDeleting}
+                  disabled={isBusy}
+                >
+                  Удалить назначение
                 </Button>
               </>
             )}

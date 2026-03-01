@@ -1,12 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Space, Title } from '@mantine/core';
-import { SearchVacancy } from '../../../features/search-vacancy/ui/SearchVacancy.tsx';
-import { useVacancyControllerFindAll } from '../../../shared/api/generated/endpoints';
-import { ROUTES } from '../../../shared/config/routes';
-import type { VacancyEntity } from '../../../shared/types';
-import { CenteredError, CenteredLoader } from '../../../shared/ui/CenteredState';
-import { VacanciesList } from '../../../widgets/vacancies-list';
+import { SearchVacancy } from '@/features/search-vacancy/ui/SearchVacancy.tsx';
+import { useVacancyControllerFindAll, type VacancyResponseDto } from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { CenteredError, CenteredLoader } from '@/shared/ui';
+import { VacanciesList } from '@/widgets/vacancies-list';
 
 const VacanciesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,7 +13,8 @@ const VacanciesPage = () => {
 
   const { data: vacanciesResponse, isLoading, error } = useVacancyControllerFindAll();
 
-  const vacancies = useMemo(() => vacanciesResponse?.data ?? [], [vacanciesResponse?.data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const vacancies = Array.isArray(vacanciesResponse?.data) ? vacanciesResponse.data : [];
 
   const filteredVacancies = useMemo(() => {
     const query = searchQuery.toLowerCase();
@@ -26,7 +26,7 @@ const VacanciesPage = () => {
   }, [searchQuery, vacancies]);
 
   const handleVacancyClick = useCallback(
-    (vacancy: VacancyEntity) => {
+    (vacancy: VacancyResponseDto) => {
       navigate(ROUTES.vacancies.detail(vacancy.id));
     },
     [navigate]

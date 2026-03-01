@@ -1,9 +1,9 @@
 import { ScrollArea, Stack } from '@mantine/core';
-import { RecruiterCard } from '../../../entities/recruiter';
-import { type RecruiterEntity } from '../../../shared/types';
+import { RecruiterCard } from '@/entities/recruiter';
+import type { RecruiterResponseDto } from '@/shared/api';
 
 interface RecruitersListProps {
-  recruiters: RecruiterEntity[];
+  recruiters: RecruiterResponseDto[];
   onRecruiterClick: (recruiterId: string) => void;
 }
 

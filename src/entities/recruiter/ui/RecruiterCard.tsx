@@ -1,8 +1,8 @@
 import { Avatar, Card, Group, Text } from '@mantine/core';
-import { type RecruiterEntity } from '../../../shared/types';
+import type { RecruiterResponseDto } from '@/shared/api';
 
 interface RecruiterCardProps {
-  recruiter: RecruiterEntity;
+  recruiter: RecruiterResponseDto;
   onClick: () => void;
 }
 

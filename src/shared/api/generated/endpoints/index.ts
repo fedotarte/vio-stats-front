@@ -24,20 +24,23 @@ import { customInstance } from '../../axios-instance';
 import type {
   AssignedVacancyRecruiterDto,
   AssignmentControllerFindAllParams,
-  CompanyEntity,
+  CompanyResponseDto,
+  CompanyWithVacanciesResponseDto,
   CreateAssignmentDto,
   CreateCompanyDto,
   CreateRecruiterDto,
   CreateVacancyDto,
   RecruiterControllerFindAllParams,
-  RecruiterEntity,
+  RecruiterResponseDto,
+  RecruiterWithAssignmentsResponseDto,
   UpdateAssignmentDto,
   UpdateCompanyDto,
   UpdateRecruiterDto,
   UpdateResumeStatsDto,
   UpdateVacancyDto,
   VacancyControllerFindAllParams,
-  VacancyEntity,
+  VacancyResponseDto,
+  VacancyWithAssignmentsResponseDto,
 } from '../models';
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
@@ -46,7 +49,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
  * @summary Создать компанию
  */
 export type companyControllerCreateResponse201 = {
-  data: CompanyEntity;
+  data: CompanyResponseDto;
   status: 201;
 };
 
@@ -140,7 +143,7 @@ export const useCompanyControllerCreate = <TError = unknown, TContext = unknown>
  * @summary Получить список всех компаний
  */
 export type companyControllerFindAllResponse200 = {
-  data: CompanyEntity[];
+  data: CompanyResponseDto[];
   status: 200;
 };
 
@@ -276,7 +279,7 @@ export function useCompanyControllerFindAll<
  * @summary Получить компанию по ID
  */
 export type companyControllerFindByIdResponse200 = {
-  data: CompanyEntity;
+  data: CompanyWithVacanciesResponseDto;
   status: 200;
 };
 
@@ -431,7 +434,7 @@ export function useCompanyControllerFindById<
  * @summary Обновить компанию
  */
 export type companyControllerUpdateResponse200 = {
-  data: CompanyEntity;
+  data: CompanyResponseDto;
   status: 200;
 };
 
@@ -640,7 +643,7 @@ export const useCompanyControllerDelete = <TError = void, TContext = unknown>(
  * @summary Создать рекрутера
  */
 export type recruiterControllerCreateResponse201 = {
-  data: RecruiterEntity;
+  data: RecruiterResponseDto;
   status: 201;
 };
 
@@ -734,7 +737,7 @@ export const useRecruiterControllerCreate = <TError = unknown, TContext = unknow
  * @summary Получить список всех рекрутеров
  */
 export type recruiterControllerFindAllResponse200 = {
-  data: RecruiterEntity[];
+  data: RecruiterResponseDto[];
   status: 200;
 };
 
@@ -895,7 +898,7 @@ export function useRecruiterControllerFindAll<
  * @summary Получить рекрутера по ID
  */
 export type recruiterControllerFindByIdResponse200 = {
-  data: RecruiterEntity;
+  data: RecruiterWithAssignmentsResponseDto;
   status: 200;
 };
 
@@ -1053,7 +1056,7 @@ export function useRecruiterControllerFindById<
  * @summary Обновить рекрутера
  */
 export type recruiterControllerUpdateResponse200 = {
-  data: RecruiterEntity;
+  data: RecruiterResponseDto;
   status: 200;
 };
 
@@ -1262,7 +1265,7 @@ export const useRecruiterControllerDelete = <TError = void, TContext = unknown>(
  * @summary Создать вакансию
  */
 export type vacancyControllerCreateResponse201 = {
-  data: VacancyEntity;
+  data: VacancyResponseDto;
   status: 201;
 };
 
@@ -1356,7 +1359,7 @@ export const useVacancyControllerCreate = <TError = unknown, TContext = unknown>
  * @summary Получить список всех вакансий
  */
 export type vacancyControllerFindAllResponse200 = {
-  data: VacancyEntity[];
+  data: VacancyResponseDto[];
   status: 200;
 };
 
@@ -1512,7 +1515,7 @@ export function useVacancyControllerFindAll<
  * @summary Получить вакансию по ID
  */
 export type vacancyControllerFindByIdResponse200 = {
-  data: VacancyEntity;
+  data: VacancyWithAssignmentsResponseDto;
   status: 200;
 };
 
@@ -1667,7 +1670,7 @@ export function useVacancyControllerFindById<
  * @summary Обновить вакансию
  */
 export type vacancyControllerUpdateResponse200 = {
-  data: VacancyEntity;
+  data: VacancyResponseDto;
   status: 200;
 };
 

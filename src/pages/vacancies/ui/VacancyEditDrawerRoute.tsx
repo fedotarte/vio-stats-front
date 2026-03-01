@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { VacancyDrawer } from '../../../features/edit-vacancy';
-import { ROUTES } from '../../../shared/config/routes';
+import { VacancyDrawer } from '@/features/edit-vacancy';
+import { ROUTES } from '@/shared/config';
 import { useVacanciesOutletContext } from '../model/route-context';
 
 const VacancyEditDrawerRoute = () => {
@@ -10,7 +10,7 @@ const VacancyEditDrawerRoute = () => {
   const { vacancies } = useVacanciesOutletContext();
 
   const selectedVacancy = useMemo(
-    () => (id ? vacancies.find((vacancy) => vacancy.id === id) ?? null : null),
+    () => (id ? (vacancies.find((vacancy) => vacancy.id === id) ?? null) : null),
     [id, vacancies]
   );
 

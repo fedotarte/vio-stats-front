@@ -7,9 +7,9 @@ import { notifications } from '@mantine/notifications';
 import {
   getCompanyControllerFindAllQueryKey,
   useCompanyControllerCreate,
-} from '../../../shared/api/generated/endpoints';
-import type { CreateCompanyDto } from '../../../shared/types';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type CreateCompanyDto,
+} from '@/shared/api';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface CreateClientDrawerProps {
   opened: boolean;

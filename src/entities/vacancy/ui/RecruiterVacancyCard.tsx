@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
 import dayjs from 'dayjs';
+import { useMemo } from 'react';
 import {
   Badge,
   Card,
@@ -9,7 +9,7 @@ import {
   Text,
   type DefaultMantineColor,
 } from '@mantine/core';
-import type { AssignedVacancyRecruiterDto } from '../../../shared/api/generated/models';
+import type { AssignedVacancyRecruiterDto } from '@/shared/api';
 
 interface RecruiterVacancyCardProps {
   recruiterVacancy: AssignedVacancyRecruiterDto;
@@ -75,18 +75,25 @@ export const RecruiterVacancyCard = ({ recruiterVacancy, onClick }: RecruiterVac
       style={{ cursor: 'pointer' }}
     >
       <Stack gap="sm">
-        <Group justify="space-between">
+        <Group justify="space-between" wrap="wrap" gap="xs">
           <Text fw={700} size="lg">
             {vacancy?.title || 'Без названия'}
           </Text>
-          {vacancy?.deadline && (
-            <Badge
-              color={dayjs(vacancy.deadline).isBefore(dayjs(), 'day') ? 'red' : 'orange'}
-              variant="light"
-            >
-              до {new Date(vacancy.deadline).toLocaleDateString('ru-RU')}
-            </Badge>
-          )}
+          <Group gap="xs" wrap="wrap">
+            {vacancy?.company?.name && (
+              <Badge variant="light" color="violet">
+                {vacancy.company.name}
+              </Badge>
+            )}
+            {vacancy?.deadline && (
+              <Badge
+                color={dayjs(vacancy.deadline).isBefore(dayjs(), 'day') ? 'red' : 'orange'}
+                variant="light"
+              >
+                до {new Date(vacancy.deadline).toLocaleDateString('ru-RU')}
+              </Badge>
+            )}
+          </Group>
         </Group>
 
         {vacancy?.title && (
@@ -113,9 +120,7 @@ export const RecruiterVacancyCard = ({ recruiterVacancy, onClick }: RecruiterVac
             <RingProgress
               size={84}
               thickness={8}
-              sections={[
-                { value: efficiencyPercent, color: getProgressColor(efficiencyPercent) },
-              ]}
+              sections={[{ value: efficiencyPercent, color: getProgressColor(efficiencyPercent) }]}
               label={
                 <Text fw={700} size="xs" ta="center">
                   {efficiencyPercent}%

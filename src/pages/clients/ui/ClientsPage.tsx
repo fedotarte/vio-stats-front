@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Space, Title } from '@mantine/core';
-import { SearchCompany } from '../../../features/search-company/ui/SearchCompany.tsx';
-import { useCompanyControllerFindAll } from '../../../shared/api/generated/endpoints';
-import { ROUTES } from '../../../shared/config/routes';
-import { CenteredError, CenteredLoader } from '../../../shared/ui/CenteredState';
-import { CompaniesList } from '../../../widgets/companies-list';
+import { SearchCompany } from '@/features/search-company/ui/SearchCompany.tsx';
+import { useCompanyControllerFindAll } from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { CenteredError, CenteredLoader } from '@/shared/ui';
+import { CompaniesList } from '@/widgets/companies-list';
 
 const ClientsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useCompanyControllerFindAll();
+  const { data: companiesResponse, isLoading, error } = useCompanyControllerFindAll();
 
-  const companies = useMemo(() => data?.data ?? [], [data?.data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const companies = Array.isArray(companiesResponse?.data) ? companiesResponse.data : [];
 
   const filteredCompanies = useMemo(() => {
     const query = searchQuery.toLowerCase();

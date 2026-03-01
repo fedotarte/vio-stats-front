@@ -34,13 +34,15 @@ import {
   useRecruiterControllerFindAll,
   useVacancyControllerDelete,
   useVacancyControllerUpdate,
-} from '../../../shared/api/generated/endpoints';
-import { ROUTES } from '../../../shared/config/routes';
-import type { RecruiterEntity, UpdateVacancyDto, VacancyEntity } from '../../../shared/types';
-import { ResponsiveDrawer } from '../../../shared/ui/ResponsiveDrawer';
+  type RecruiterResponseDto,
+  type UpdateVacancyDto,
+  type VacancyResponseDto,
+} from '@/shared/api';
+import { ROUTES } from '@/shared/config';
+import { ResponsiveDrawer } from '@/shared/ui';
 
 interface VacancyDrawerProps {
-  vacancy: VacancyEntity | null;
+  vacancy: VacancyResponseDto | null;
   opened: boolean;
   onCloseVacancyDrawer: () => void;
   initialEditing?: boolean;
@@ -54,7 +56,7 @@ interface VacancyFormValues {
   requiredResumes: number;
 }
 
-const prepareRecruitersFullName = (recruiter: RecruiterEntity) =>
+const prepareRecruitersFullName = (recruiter: RecruiterResponseDto) =>
   `${recruiter.firstName} ${recruiter.lastName}`;
 
 const colorsTuple = [
@@ -92,12 +94,13 @@ export const VacancyDrawer = ({
   const { data: recruitersData, isFetching: isRecruiterFetching } = useRecruiterControllerFindAll();
   const recruiters = useMemo(() => recruitersData?.data, [recruitersData?.data]);
 
-  const { data: assignmentsData, isFetching: isAssignmentsFetching } =
+  const { data: assignmentsResponse, isFetching: isAssignmentsFetching } =
     useAssignmentControllerFindAll(
       { vacancyId: vacancy?.id },
       { query: { enabled: !!vacancy?.id } }
     );
-  const assignments = useMemo(() => assignmentsData?.data ?? [], [assignmentsData?.data]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const assignments = Array.isArray(assignmentsResponse?.data) ? assignmentsResponse.data : [];
 
   const currentRecruiterIds = useMemo(() => assignments.map((a) => a.recruiterId), [assignments]);
 
@@ -156,15 +159,18 @@ export const VacancyDrawer = ({
 
   const { mutateAsync: deleteVacancy, isPending: isVacancyRemoving } = useVacancyControllerDelete({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         notifications.show({
           title: 'Успешно',
           message: 'Вакансия удалена',
           color: 'green',
         });
-        queryClient.invalidateQueries({ queryKey: getVacancyControllerFindAllQueryKey() });
-        onCloseVacancyDrawer();
-        navigate(ROUTES.vacancies.root);
+        await queryClient.invalidateQueries({ queryKey: getVacancyControllerFindAllQueryKey() });
+        await queryClient.invalidateQueries({
+          queryKey: getAssignmentControllerFindAllQueryKey(),
+        });
+        await onCloseVacancyDrawer();
+        await navigate(ROUTES.vacancies.root);
       },
       onError: () => {
         notifications.show({
@@ -201,9 +207,7 @@ export const VacancyDrawer = ({
       },
     });
 
-  // Синхронизируем режим редактирования с URL
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsEditing(initialEditing);
   }, [initialEditing, opened]);
 
@@ -387,13 +391,18 @@ export const VacancyDrawer = ({
                   <Text fw={700} size="xl">
                     {vacancy.title}
                   </Text>
-                  {vacancy.deadline && (
-                    <Group gap="xs" mt="sm">
+                  <Group gap="xs" mt="sm" wrap="wrap">
+                    {vacancy.company?.name && (
+                      <Badge variant="light" color="violet" size="lg">
+                        {vacancy.company.name}
+                      </Badge>
+                    )}
+                    {vacancy.deadline && (
                       <Badge color="orange" size="lg">
                         Дедлайн: {new Date(vacancy.deadline).toLocaleDateString('ru-RU')}
                       </Badge>
-                    </Group>
-                  )}
+                    )}
+                  </Group>
                 </div>
 
                 {vacancy.description && (

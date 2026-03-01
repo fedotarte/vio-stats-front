@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
-import { ROUTES } from '../../../shared/config/routes';
+import { ROUTES } from '@/shared/config';
 
 /**
  * Редирект с /company/:companyId на /company/:companyId/edit,

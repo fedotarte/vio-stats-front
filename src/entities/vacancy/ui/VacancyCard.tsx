@@ -1,13 +1,26 @@
 import dayjs from 'dayjs';
-import { Card, Text, Group, Badge, Stack } from '@mantine/core';
-import type { VacancyEntity } from '../../../shared/types';
+import { useMemo } from 'react';
+import { Badge, Card, Group, Stack, Text } from '@mantine/core';
+import type { VacancyResponseDto } from '@/shared/api';
 
 interface VacancyCardProps {
-  vacancy: VacancyEntity;
+  vacancy: VacancyResponseDto;
   onClick: () => void;
 }
 
 export const VacancyCard = ({ vacancy, onClick }: VacancyCardProps) => {
+  const { deadlineDate, deadLineColor } = useMemo(
+    () => ({
+      deadlineDate: vacancy.deadline
+        ? new Date(vacancy.deadline).toLocaleDateString('ru-RU')
+        : null,
+      deadLineColor: dayjs(vacancy.deadline).isBefore(dayjs(), 'day') ? 'red' : 'orange',
+    }),
+    [vacancy.deadline]
+  );
+
+  const companyName = vacancy?.company?.name;
+
   return (
     <Card
       shadow="sm"
@@ -22,12 +35,9 @@ export const VacancyCard = ({ vacancy, onClick }: VacancyCardProps) => {
           <Text fw={700} size="lg">
             {vacancy.title}
           </Text>
-          {vacancy.deadline && (
-            <Badge
-              color={dayjs(vacancy.deadline).isBefore(dayjs(), 'day') ? 'red' : 'orange'}
-              variant="light"
-            >
-              до {new Date(vacancy.deadline).toLocaleDateString('ru-RU')}
+          {deadlineDate && (
+            <Badge color={deadLineColor} variant="light">
+              до {deadlineDate}
             </Badge>
           )}
         </Group>
@@ -36,9 +46,16 @@ export const VacancyCard = ({ vacancy, onClick }: VacancyCardProps) => {
             {vacancy.description}
           </Text>
         )}
-        <Text size="xs" c="dimmed">
-          Создано: {new Date(vacancy.createdAt).toLocaleDateString('ru-RU')}
-        </Text>
+        <Group gap="sm">
+          <Text size="xs" c="dimmed">
+            Создано: {new Date(vacancy.createdAt).toLocaleDateString('ru-RU')}
+          </Text>
+          {companyName && (
+            <Badge variant="light" color="violet">
+              {companyName}
+            </Badge>
+          )}
+        </Group>
       </Stack>
     </Card>
   );
